@@ -1,0 +1,230 @@
+
+.raz {
+    all: unset;
+    -moz-appearance: textfield;
+    width: 3em;
+    text-align: center;
+  }
+  .raz::-webkit-inner-spin-button { 
+    display: none;
+  }
+.p{
+margin-top: 5px;
+}
+textarea
+ { 
+  resize: none;
+
+ }
+  .header {
+    
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 10px;
+}
+@media (max-width: 769px) 
+{.header-logo-1 img 
+{
+  max-width: 100px;
+  height: auto;
+}
+
+.header-logo-2 img {
+  max-width: 150px;
+  height: auto;
+}
+}
+@media (min-width: 770px) {
+.header-logo-1 img 
+{
+  max-width: 150px;
+  height: auto;
+}
+
+.header-logo-2 img {
+  max-width: 200px;
+  height: auto;
+}}
+
+.title-body {
+    text-align: center;
+    position: relative;
+    margin-top: 20px;
+}
+
+.title-body p {
+    letter-spacing: 2px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+    /* Общие стили */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f4f4f4;
+}
+
+.container {
+  width: 80%;
+  margin: auto;
+  padding: 20px;
+  background-color: #fff;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+.form-application {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Стили для кнопок увеличения и уменьшения количества участников */
+button[type="button"] {
+  background-color: #f4f4f4;
+  border: none;
+  color: #666;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+
+/* Стили для радиокнопок */
+.form-application[type="radio"] {
+  margin-right: 5px;
+}
+
+/* Стили для заголовков */
+h2 {
+  font-size: 18px;
+  margin-top: 15px;
+}
+
+/* Стили для выпадающего списка */
+#ceremonyFormat {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+/* Стили для кнопок "Отправить" и "Сбросить" */
+button[type="submit"], button[type="reset"] {
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="submit"]:hover, button[type="reset"]:hover {
+  background-color: #0056b3;
+}
+
+p{
+  margin-top: 0px; /* Отступ сверху */
+  margin-bottom: -10px; /* Отступ снизу */
+}
+
+.gender {
+  display: flex;
+  gap:10px;
+  flex-direction: column;
+}
+
+/* Стили для каждого варианта пола (женский и мужской) */
+.gender div {
+  display: flex;
+  align-items: center;
+  margin-right: 10px;
+  margin-bottom: -10px;
+}
+
+.heading 
+{
+  text-decoration: underline;
+  text-underline-position: under;
+  text-decoration-skip-ink: none;
+  color:blue
+}
+
+
+/* Стили для радиокнопок */
+.gender input[type="radio"] {
+  margin-right: 5px;
+  transform: scale(1.2); /* Увеличиваем размер радиокнопок */
+  margin-bottom: 5px;
+}
+/* Общие стили для контейнера опций */
+
+/* Стили для чекбоксов */
+.form-application-checkbox {
+  transform: scale(1.5);
+  width: 10px;
+}
+
+/* Общие стили для формы авторизации */
+.container-authorization
+{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+/* Стили для формы регистрации */
+.form-registration{
+  width: 600px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  box-sizing: border-box;
+  margin: 0 auto;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.form-registration > h2{
+  text-align: center;
+}
+/* Стили для формы авторизации */
+.form-authorization{
+  width: 600px;
+  padding: 10px;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 25px;
+  box-sizing: border-box;
+  margin: 0 auto;
+
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+.form-authorization > h2{
+  text-align: center;
+}
+/* Стили для иконки глаза на пароле */
+.password {
+ position: relative;
+}
+.password-control {
+
+ position: absolute;
+ top: 11px;
+ right: 6px;
+ display: inline-block;
+ width: 20px;
+ height: 20px;
+ background: url(./img/Eye_Open.svg) 0 0 no-repeat;
+}
+.password-control.Eye_Open {
+
+ background: url(./img/Eye_Close.svg) 0 0 no-repeat;
+
+}

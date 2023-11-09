@@ -1,5 +1,5 @@
 dockerfile
 docker-compose.yml
 migrations
-pycache
+__pycache__
 conf.py
