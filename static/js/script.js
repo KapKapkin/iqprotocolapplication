@@ -120,29 +120,11 @@ function checkWordToTheParticipantsYes()//Функция наличия слов
 {
 
   var checkboxParticipants = document.getElementById("wordToTheParticipantsYes");
-  const numberParticipants = document.getElementById("checkedWordToTheParticipantsTrue");
+  const numberParticipants = document.getElementById("participants");
 
   if (checkboxParticipants.checked == true) {
     checkboxParticipants.disabled = true;
-    const participantsDiv = document.createElement('div'); // Создание обертки для элементов
-    participantsDiv.id = 'participantsTrue';
-    participantsDiv.innerHTML =
-      '<p><span style="color: red">*</span> Слово предоставляется:</p><br>' +
-      '<div>' +
-      '<input type="radio" checked="checked" name="timePerformance" id="timePerformanceEnd" required>В конце церемонии<br>' +
-      '<input type="radio" name="timePerformance" id="timePerfomaceStart" required>В начале церемонии ' +
-      '</div> <br>' +
-
-      '<p><span style="color: red">*</span> Дополнительный спикер (не является участником)</p><br>' +
-      '<div>' +
-      '<input type="radio" onclick="checkAdditionalSpeakerYes();" name="additionalSpeaker" id="additionalSpeakerYes" required>Да<br>' +
-      '<input type="radio" onclick="checkAdditionalSpeakerNo();" checked="checked" name="additionalSpeaker" id="additionalSpeakerNo" required>Нет ' +
-      '</div> <br>' +
-
-      '<button type="button" onclick="this.nextElementSibling.stepDown(); MinParticipants();">-</button>' +
-      '<input type="number" min="1" max="10" value="1" readonly class="raz" name="quantityParticipants" id="quantityParticipants">' +
-      '<button type="button" onclick="AddParticipants(); this.previousElementSibling.stepUp();">+</button>';
-
+    document.getElementById("participantsTrue").setAttribute("class", "");
 
     const select = getSelect();
     const participantDiv = document.createElement('div'); // Создание обертки для элементов
@@ -157,7 +139,20 @@ function checkWordToTheParticipantsYes()//Функция наличия слов
     numberParticipants.appendChild(participantDiv);
   }
 
-
+}
+function checkWordToTheParticipantsNo()//Функция отсутствия слово учатникам
+{
+  var checkboxParticipantsYes = document.getElementById("wordToTheParticipantsYes");
+  var checkboxParticipantsNo = document.getElementById("wordToTheParticipantsNo");
+  if (checkboxParticipantsNo.checked == true) {
+    checkboxParticipantsYes.disabled = false;
+  }
+  var removeParticipants = document.getElementById("participantsTrue");
+  removeParticipants.remove();
+  for (i = 1; i < 11; i++) {
+    const deleteNumberParticipants = document.getElementById("participant" + i);
+    deleteNumberParticipants.remove();
+  }
 }
 
 function checkAdditionalSpeakerYes() {
@@ -197,7 +192,8 @@ function getSelect() {
   const select = document.createElement('select'); // Создание элемента <select>
   select.className = "form-application"; // Присвоение класса
 
-  var countSigning = document.getElementById("quantityOfPartiesSigningTheDocument").value;
+  var countSigning = document.getElementById("form-counter").value;
+  console.log(countSigning);
 
   for (i = 1; i <= countSigning; i++) {
     const lastnameSigning = document.getElementById("lastname" + i).value;
@@ -218,20 +214,7 @@ function getSelect() {
 
 
 
-function checkWordToTheParticipantsNo()//Функция отсутствия слово учатникам
-{
-  var checkboxParticipantsYes = document.getElementById("wordToTheParticipantsYes");
-  var checkboxParticipantsNo = document.getElementById("wordToTheParticipantsNo");
-  if (checkboxParticipantsNo.checked == true) {
-    checkboxParticipantsYes.disabled = false;
-  }
-  var removeParticipants = document.getElementById("participantsTrue");
-  removeParticipants.remove();
-  for (i = 1; i < 11; i++) {
-    const deleteNumberParticipants = document.getElementById("participant" + i);
-    deleteNumberParticipants.remove();
-  }
-}
+
 
 function AddParticipants()//Функция добавления участника
 {

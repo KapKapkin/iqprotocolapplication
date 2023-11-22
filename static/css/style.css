@@ -1,65 +1,67 @@
-
 .raz {
-    all: unset;
-    -moz-appearance: textfield;
-    width: 3em;
-    text-align: center;
-  }
-  .raz::-webkit-inner-spin-button { 
-    display: none;
-  }
-.p{
-margin-top: 5px;
+  all: unset;
+  -moz-appearance: textfield;
+  width: 3em;
+  text-align: center;
 }
-textarea
- { 
+
+.raz::-webkit-inner-spin-button {
+  display: none;
+}
+
+.p {
+  margin-top: 5px;
+}
+
+textarea {
   resize: none;
 
- }
-  .header {
-    
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 10px;
-}
-@media (max-width: 769px) 
-{.header-logo-1 img 
-{
-  max-width: 100px;
-  height: auto;
 }
 
-.header-logo-2 img {
-  max-width: 150px;
-  height: auto;
+.header {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px;
 }
+
+@media (max-width: 769px) {
+  .header-logo-1 img {
+    max-width: 100px;
+    height: auto;
+  }
+
+  .header-logo-2 img {
+    max-width: 150px;
+    height: auto;
+  }
 }
+
 @media (min-width: 770px) {
-.header-logo-1 img 
-{
-  max-width: 150px;
-  height: auto;
-}
+  .header-logo-1 img {
+    max-width: 150px;
+    height: auto;
+  }
 
-.header-logo-2 img {
-  max-width: 200px;
-  height: auto;
-}}
+  .header-logo-2 img {
+    max-width: 200px;
+    height: auto;
+  }
+}
 
 .title-body {
-    text-align: center;
-    position: relative;
-    margin-top: 20px;
+  text-align: center;
+  position: relative;
+  margin-top: 20px;
 }
 
 .title-body p {
-    letter-spacing: 2px;
-    font-weight: bold;
-    font-size: 18px;
+  letter-spacing: 2px;
+  font-weight: bold;
+  font-size: 18px;
 }
 
-    /* Общие стили */
+/* Общие стили */
 body {
   font-family: Arial, sans-serif;
   margin: 0;
@@ -116,7 +118,8 @@ h2 {
 }
 
 /* Стили для кнопок "Отправить" и "Сбросить" */
-button[type="submit"], button[type="reset"] {
+button[type="submit"],
+button[type="reset"] {
   background-color: #007bff;
   color: #fff;
   border: none;
@@ -125,18 +128,29 @@ button[type="submit"], button[type="reset"] {
   cursor: pointer;
 }
 
-button[type="submit"]:hover, button[type="reset"]:hover {
+button[type="delete"] {
+  background-color: #ff0000;
+  color: #fff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button[type="reset"]:hover {
   background-color: #0056b3;
 }
 
-p{
-  margin-top: 0px; /* Отступ сверху */
-  margin-bottom: -10px; /* Отступ снизу */
+p {
+  margin-top: 0px;
+  /* Отступ сверху */
+  margin-bottom: -10px;
+  /* Отступ снизу */
 }
 
 .gender {
   display: flex;
-  gap:10px;
+  gap: 10px;
   flex-direction: column;
 }
 
@@ -148,21 +162,22 @@ p{
   margin-bottom: -10px;
 }
 
-.heading 
-{
+.heading {
   text-decoration: underline;
   text-underline-position: under;
   text-decoration-skip-ink: none;
-  color:blue
+  color: blue
 }
 
 
 /* Стили для радиокнопок */
 .gender input[type="radio"] {
   margin-right: 5px;
-  transform: scale(1.2); /* Увеличиваем размер радиокнопок */
+  transform: scale(1.2);
+  /* Увеличиваем размер радиокнопок */
   margin-bottom: 5px;
 }
+
 /* Общие стили для контейнера опций */
 
 /* Стили для чекбоксов */
@@ -172,15 +187,15 @@ p{
 }
 
 /* Общие стили для формы авторизации */
-.container-authorization
-{
+.container-authorization {
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100vh;
 }
+
 /* Стили для формы регистрации */
-.form-registration{
+.form-registration {
   width: 600px;
   padding: 10px;
   margin-bottom: 10px;
@@ -191,11 +206,13 @@ p{
 
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
-.form-registration > h2{
+
+.form-registration>h2 {
   text-align: center;
 }
+
 /* Стили для формы авторизации */
-.form-authorization{
+.form-authorization {
   width: 600px;
   padding: 10px;
   margin-bottom: 10px;
@@ -206,25 +223,113 @@ p{
 
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
-.form-authorization > h2{
+
+.form-authorization>h2 {
   text-align: center;
 }
+
 /* Стили для иконки глаза на пароле */
 .password {
- position: relative;
+  position: relative;
 }
+
 .password-control {
 
- position: absolute;
- top: 11px;
- right: 6px;
- display: inline-block;
- width: 20px;
- height: 20px;
- background: url(./img/Eye_Open.svg) 0 0 no-repeat;
+  position: absolute;
+  top: 11px;
+  right: 6px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  background: url(../images/Eye_Open.svg) 0 0 no-repeat;
 }
+
 .password-control.Eye_Open {
 
- background: url(./img/Eye_Close.svg) 0 0 no-repeat;
+  background: url(../images/Eye_Close.svg) 0 0 no-repeat;
 
+}
+
+.hidden {
+  display: none;
+}
+
+/* фио и аватарка  */
+.employee-profile {
+  display: flex;
+  align-items: center;
+}
+
+.employee-photo img {
+  width: 100px;
+  /* задайте нужную ширину для фото */
+  height: 100px;
+  /* задайте нужную высоту для фото */
+  border: 2px solid black;
+  /* чёткая рамка шириной 2 пикселя, цвет черный */
+  border-radius: 50%;
+  /* чтобы сделать рамку круглой */
+}
+
+
+.employee-info {
+  margin-left: 20px;
+  /* отступ между фото и информацией */
+}
+
+.middle-initials {
+  font-size: 1.5em;
+  /* размер шрифта для средних букв ФИО */
+}
+
+.position {
+  font-size: 0.8em;
+  /* размер шрифта для должности */
+  color: #888;
+  /* цвет для статуса/должности */
+}
+
+
+/* таблица и кнопка */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+td {
+  padding: 10px;
+  text-align: center;
+}
+
+.download-cell {
+  text-align: center;
+}
+
+.download-button {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3498db;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #2980b9;
+}
+
+/* Анимация при наведении */
+.download-button::after {
+  content: '';
+  display: block;
+  width: 0;
+  height: 2px;
+  background: #fff;
+  transition: width 0.3s;
+}
+
+.download-button:hover::after {
+  width: 100%;
+  transition: width 0.3s;
 }

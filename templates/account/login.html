@@ -1,0 +1,72 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <title>Форма авторизации</title>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    <script type="text/javascript" src="{% static 'js/script.js' %}"> </script>
+
+</head>
+
+<body>
+    <div class="container-authorization mt-4">
+        <div class="form-container" id="login-form" style="display: block;">
+            <div class="form-authorization">
+                <form action="" method="post">
+                    {% csrf_token %}
+                    <h2 style="text-align: center;">Авторизация</h2>
+                    {{ form.login }}<br>
+                    <div class="password">
+                        {{form.password}}
+                        <a href="#" class="password-control" onclick="return show_hide_password(this);"></a><br>
+
+                    </div>
+                    <a href="{% url 'account_reset_password'%}">Забыл пароль</a>
+                    <div id="error-message-log"></div> <br>
+                    {% for f, es in form.errors.items %}
+                    {% for e in es %}
+                    <div class="alert alert-danger" role="alert">
+                        {{ f }}: {{ e }}
+                    </div>
+                    {% endfor %}
+                    {% endfor %}
+
+
+                    <button class="form-application" type="submit">Войти</button>
+                </form>
+                <button class="form-application"
+                    onclick=document.location.href="{% url 'account_signup'%}">Регистрация</button>
+            </div>
+
+
+        </div>
+
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+</body>
+<script>
+    function show_hide_password(target) {
+
+        var input = document.getElementById('loginPassword');
+        if (input.getAttribute('type') == 'password') {
+            target.classList.add('Eye_Open');
+            input.setAttribute('type', 'text');
+        } else {
+            target.classList.remove('Eye_Open');
+            input.setAttribute('type', 'password');
+        }
+
+        return false;
+    }
+</script>
+
+</html>

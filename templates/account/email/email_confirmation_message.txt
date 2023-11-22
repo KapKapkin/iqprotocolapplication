@@ -1,0 +1,8 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% user_display user as user_display %}{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}Вы получили это письмо, потому что ваш адрес электронной почты {{ user_display }} был указан на сайте {{ site_domain }} для прохождения регистрации.
+
+Чтобы активировать вашу учётную запись необходимо перейти по ссылке {{ activate_url }}{% endblocktrans %}
+Если же это были не вы, проигнорируйте это письмо.{% endautoescape %}{% endblock content %}

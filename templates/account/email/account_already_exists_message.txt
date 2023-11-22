@@ -1,0 +1,10 @@
+{% extends "account/email/base_message.txt" %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% blocktrans %}Вы получили это сообщение, потому что кто-то пытается создать учётную запись с вашей электронной почтой
+
+{{ email }}
+
+Учётная запись с этим email адресом уже создана. Если же вы забыли пароль от вашей учётной записи, пожалуйста, перейдите по этой ссылке:
+
+{{ password_reset_url }}{% endblocktrans %}{% endautoescape %}{% endblock content %}

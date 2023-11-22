@@ -1,0 +1,106 @@
+{% extends 'index.html' %}
+
+{% load static %}
+
+{% block header1 %} Личный Кабинет {% endblock %}
+
+{% block content %}
+<div style="width:100%; text-align: left;" class="divi">
+    <div class="title-body">
+        <div>
+            <div class="employee-profile">
+                <!-- <div class="employee-photo">
+                    <img src="ссылка_на_фото.jpg" alt="Фото сотрудника">
+                </div> -->
+                <div class="employee-info">
+                    <!-- ФИО сотрудника -->
+                    <div class="employee-name">
+                        <span class="middle-initials">{{user.email}}</span>
+                    </div>
+
+                    <div class="employee-position" style="text-align: left;">
+                        <span class=" position">
+                            {% if user.is_superuser%}
+                            <a href=" {% url 'admin:index' %}">Администратор</a>
+                            {% elif user.is_staff %}
+                            Сотрудник
+                            {% else %}
+                            Пользователь
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <br>
+        <div>
+            <table border="1">
+                <tr>
+                    <td>Номер заявки</td>
+                    <td>Наз. Док.</td>
+                    <td>Дата</td>
+                    <td>Время</td>
+                    <td>Место</td>
+                    <td>Email</td>
+                    <td>Номер телефона</td>
+                    <td>Имя</td>
+                </tr>
+                {% for event in events %}
+                <tr>
+                    <td>{{event.number}}</td>
+                    <td>{{event.doc_name}}</td>
+                    <td>{{event.window.date}}</td>
+                    <td>{{event.window.time}}</td>
+                    <td>{{event.window.place}}</td>
+                    <td>{{event.email}}</td>
+                    <td>{{event.phone_number}}</td>
+                    <td>{{event.name}}</td>
+                    <td><a href="{% url 'event' pk=event.id %}"><button type="submit">Просм</button></td>
+
+                    <!-- {% if request.user.is_superuser or request.user.is_staff %}
+                    <td class="download-cell"><a href="#" class="download-button">Ред</a></td>
+                    {% else %}
+                    <td class="download-cell"><a href="#" class="download-button">Скачать</a></td>
+                    {% endif %} -->
+                </tr>
+                {% endfor %}
+            </table>
+            {% if user.is_superuser or user.is_staff%}
+            <h3 style="margin-bottom: 0; font-style:italic;">Добавление свободных окон</h3>
+            <form method="POST" style="text-align: left;">
+                {% csrf_token %}
+                <p><span style=" color: red">*</span> {{ form.date.label }}</p><br>
+                {{ form.date }}<br>
+                <p><span style="color: red">*</span> {{ form.time.label }}</p><br>
+                {{ form.time }}<br>
+                <p><span style="color: red">*</span> {{ form.place.label }}</p><br>
+                {{ form.place }}<br>
+                <button type="submit">Отправить</button>
+            </form>
+            <br>
+            <h3 style="margin-bottom: 0; font-style:italic;">Cвободные окна</h3>
+            <table border="1">
+                <tr>
+                    <td>Дата</td>
+                    <td>Время</td>
+                    <td>Место</td>
+
+                </tr>
+                {% for window in windows %}
+                <tr>
+                    <td>{{window.date}}</td>
+                    <td>{{window.time}}</td>
+                    <td>{{window.place}}</td>
+                    <td><a href="{% url 'window_delete' window.id %}"><button type="delete">Del</button></a>
+                    </td>
+                </tr>
+                {% endfor %}
+
+            </table>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<br>
+{% endblock %}

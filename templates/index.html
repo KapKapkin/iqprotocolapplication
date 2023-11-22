@@ -1,3 +1,5 @@
+{% load static %}
+
 <!DOCTYPE html>
 <html lang="ru">
 
@@ -6,15 +8,19 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %} {% endblock %}</title>
-    <link rel="stylesheet" href="style.css">
-    <script type="text/javascript" src="./script.js"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css'%}">
+    {% block extend_head%}
+    {% endblock %}
 </head>
 
 <body>
     <div class="container mt-4">
         <div class="header">
-            <div class="header-logo-1"> <img src="./img/logoIQProtocol.png"> </div>
-            <div class="header-logo-2"> <img src="./img/logoRoscongress.svg"> </div>
+            <div class="header-logo-1">
+                <a href="{% url 'event_form' %}"><img src="{% static 'images/logoIQProtocol.png' %}"></a>
+            </div>
+            <div class="header-logo-2"> <img src="{% static 'images/logoRoscongress.svg' %}"> </div>
         </div>
         <div style="text-align: center; width:100%" class="divi">
             <div class="title-body">
@@ -26,15 +32,16 @@
                             <p>
                         </b> </p>
                 </div> <br>
-                <div>
-                    <hr>
-                </div>
+                <hr>
+
             </div>
-        </div>  
+        </div>
+        {% block content %}
+        {% endblock %}
     </div>
 
-    {% block content %}
-    {% endblock %}
+
+
 
 </body>
 

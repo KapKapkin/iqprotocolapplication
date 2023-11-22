@@ -1,4 +1,7 @@
 from django.urls import path
-
-url_patterns = [
+from eventrequests import views
+urlpatterns = [
+    path('', views.create_event, name='event_form'),
+    path('window/delete/<int:pk>/', views.delete_window, name='window_delete'),
+    path('event/<uuid:pk>/', views.show_event, name='event')
 ]

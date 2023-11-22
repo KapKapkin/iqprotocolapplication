@@ -1,0 +1,9 @@
+{% extends "account/email/base_message.txt" %}
+{% load account %}
+{% load i18n %}
+
+{% block content %}{% autoescape off %}{% user_display user as user_display %}Вы отправили заявку на проведение мероприятия, время обработки до 5 рабочих дней. Номер вашей заявки {{ event_id }}.
+
+
+Ваши заявки http://127.0.0.1:8000/account/
+{% endautoescape %}{% endblock content %}
