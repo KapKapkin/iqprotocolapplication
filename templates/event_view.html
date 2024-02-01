@@ -9,12 +9,10 @@
 
 {% block content %}
 <h2 class="heading">Вводные данные по церемонии</h2>
-<p> Название организации-заказчика:</p><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
-    disabled>{{event.customer_name}}</textarea>
-<p> Полное наименование подписываемого документа:</p><br>
+    disabled>{{event.customer_name}}</textarea><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>{{event.doc_name}}</textarea>
-<p> Дата, время, место:</p><br>
+<br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>{{event.window}}</textarea>
 
 <h2 class="heading">Информация о сторонах - участниках подписания:</h2>
@@ -70,15 +68,13 @@
 
 <h2 class="heading">Обмен подарками во время церемонии</h2>
 <hr>
-<p> Обмен подарками во время церемонии:</p><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled> {% if event.presents %}Да {% else%}Нет {% endif %}</textarea>
 <hr>
 
 {% if speakers %}
 <h2 class="heading">Предоставление слова участникам церемонии</h2>
-<hr>
-<p> Слово предоставляется:</p><br>
+<hr><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled> {{ event.time_for_speakers }}</textarea>
 <hr>
@@ -98,15 +94,13 @@
 
 
 
-<h2 class="heading">Предоставить возможность прессе задавать вопросы после церемонии</h2>
-<hr>
-<p> Предоставить возможность прессе задавать вопросы после церемонии:</p><br>
+<h2 class="heading">Пресс-подход</h2>
+<hr><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled> {% if event.press_briefing %}Да {% else%}Нет {% endif %}</textarea>
 <hr>
 <h2 class="heading">Формат церемонии</h2>
-<hr>
-<p> В каком формате будет проходить церемония:</p><br>
+<hr><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled> {% if event.is_online %} Удаленная онлайн-церемония (одна из сторон подписывает соглашение онлайн) {% else%}Церемония сполным присутствием (все стороны присутствуют взале) {% endif %}</textarea>
 <hr>

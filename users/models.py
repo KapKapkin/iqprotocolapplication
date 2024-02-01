@@ -1,6 +1,7 @@
 import uuid
 
 from django.db import models
+from django.core import serializers
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.utils import timezone
@@ -34,6 +35,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_absolute_url(self):
         return reverse('profile', kwargs={'pk': self.id})
+
+    def toJSON(self):
+        serialized_obj = serializers.serialize(
+            'json', [self,], fields=['id', 'email', 'is_staff', 'is_superuser'])
+        return serialized_obj
 
     class Meta:
         verbose_name_plural = "Пользователи"

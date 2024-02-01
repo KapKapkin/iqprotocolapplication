@@ -23,6 +23,7 @@ urlpatterns = [
 
     # 3rd party apps
     path('account/', include('allauth.urls')),
+    path('_nested_admin/', include('nested_admin.urls')),
 
     # local apps
     path('', include('eventrequests.urls')),

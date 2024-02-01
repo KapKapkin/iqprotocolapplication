@@ -1,4 +1,5 @@
 from allauth.account.forms import LoginForm, SignupForm
+from datetime import datetime, timedelta
 from django import forms
 
 from eventrequests.models import AvWindow
@@ -25,6 +26,15 @@ class UserSignupForm(SignupForm):
 
 
 class WindowForm(forms.ModelForm):
+    place = forms.CharField(
+
+        label="Место",
+        widget=forms.Textarea(attrs={
+            'class': 'form-application',
+            'rows': 1,
+            'cols': 30,
+            'placeholder': "Введите место:"})
+    )
 
     class Meta:
         model = AvWindow
@@ -39,16 +49,12 @@ class WindowForm(forms.ModelForm):
             'date': forms.widgets.Input(attrs={
                 'type': 'date',
                 'class': 'form-application',
-                'min': "2023-08-28",
-                'max': "2023-10-31",
+                'min': datetime.now().date() + timedelta(days=1)
             }),
+
             'time': forms.widgets.Input(attrs={
                 'type': 'time',
                 'class': 'form-application',
+                'min': datetime.now().time()
             }),
-            'place': forms.Textarea(attrs={
-                'class': 'form-application',
-                'rows': 1,
-                'cols': 30,
-                'placeholder': "Введите текст:"
-            }), }
+        }

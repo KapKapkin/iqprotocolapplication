@@ -21,7 +21,7 @@ class EventForm(forms.ModelForm):
     )
     press_briefing = forms.ChoiceField(
         required=True,
-        label="Предоставить возможность прессе задавать вопросы после церемонии",
+        label="Пресс-подход (наличие прессы обеспечивает заказчик)",
         widget=forms.RadioSelect,
         choices=[
             (True, 'Да'),
@@ -57,6 +57,7 @@ class EventForm(forms.ModelForm):
             (False, 'Нет, это другой человек')
         ],
     )
+
     honored_guests_format = forms.ChoiceField(
         required=False,
         label="Формат участия почетных гостей",

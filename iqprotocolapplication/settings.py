@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'channels',
+    'nested_admin',
     # local
     'users.apps.UsersConfig',
     'eventrequests.apps.EventrequestsConfig',
@@ -179,3 +181,27 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = GOOGLE_MAIL
 EMAIL_HOST_PASSWORD = GMAIL_PASSWORD
 EMAIL_USE_TLS = True
+
+# channels conf
+
+ASGI_APPLICATION = 'iqprotocolapplication.asgi.application'
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', 6379)],
+            'symmetric_encryption_keys': [
+                SECRET_KEY,
+            ]
+        }
+    }
+}
+# REDIS conf
+
+REDIS_HOST = 'localhost'
+REDIS_PORT = 6379
+
+FILE_UPLOAD_HANDLERS = [
+    "django.core.files.uploadhandler.MemoryFileUploadHandler",
+    "django.core.files.uploadhandler.TemporaryFileUploadHandler",
+]

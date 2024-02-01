@@ -4,6 +4,13 @@
 
 {% block header1 %} Личный Кабинет {% endblock %}
 
+{% block extend_head%}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+<!-- <link rel="stylesheet" href="{% static 'css/style.css'%}"> -->
+{% endblock %}
+
 {% block content %}
 <div style="width:100%; text-align: left;" class="divi">
     <div class="title-body">
@@ -35,28 +42,118 @@
         </div>
         <br>
         <div>
-            <table border="1">
+            <p class="d-inline-flex gap-1">
+                <a class="btn btn-primary" data-bs-toggle="collapse" href="#collapseExample" role="button"
+                    aria-expanded="false" aria-controls="collapseExample">
+                    Фильтры
+                </a>
+
+            </p>
+            <div class="collapse" id="collapseExample" style="width:auto;">
+                <div class="card card-body">
+                    <table style="text-align: center;">
+                        <tr>
+                            <td>
+                                По месту
+                            </td>
+                            <td>
+                                время и дата начала
+                            </td>
+                            <td>
+                                время и дата конца
+                            </td>
+                        </tr>
+
+
+                        <tr style="height: 80px;">
+                            <td>
+                                <select name="place" id="place" class="sort-select" onchange="Filter()">
+                                    <option value="">Место</option>
+                                    {% for place in places%}
+                                    <option value="{{place}}">{{place}}</option>
+                                    {% endfor %}
+                                </select>
+                            </td>
+                            <td>
+                                <input type="date" name="start-time" id="start-date" class="sort-select"
+                                    onchange="Filter()">
+
+
+                            </td>
+                            <td>
+                                <input type="date" name="end-time" id="end-date" class="sort-select"
+                                    onchange="Filter()">
+                            </td>
+
+                        </tr>
+
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="time" name="start-time" id="start-time" class="sort-select"
+                                    onchange="Filter()" default="">
+                            </td>
+                            <td>
+                                <input type="time" name="end-time" id="end-time" class="sort-select" onchange="Filter()"
+                                    placeholder="">
+                            </td>
+                        </tr>
+
+
+                    </table>
+
+
+
+                </div>
+            </div>
+            <table border="1" id="event-table" class="table table-striped">
+
                 <tr>
-                    <td>Номер заявки</td>
-                    <td>Наз. Док.</td>
-                    <td>Дата</td>
-                    <td>Время</td>
-                    <td>Место</td>
-                    <td>Email</td>
-                    <td>Номер телефона</td>
-                    <td>Имя</td>
+                    <th style="width:3%;">ID</th>
+                    <th style="width:9%;">Наз. Док.</th>
+                    <th style="width:16%;">Дата</th>
+                    <th style="width:7%;">Время</th>
+                    <th style="width:15%;">Место</th>
+                    <th style="width:10%;">Email</th>
+                    <th style="width:15%;">Номер телефона</th>
+                    <th style="width:15%;">Имя</th>
+                    {% if user.if_staff or user.is_superuser%}
+                    <th style="width:10%;">Исполнитель</th>
+                    {% endif %}
+
+                    <td> </td>
                 </tr>
                 {% for event in events %}
-                <tr>
+                <tr value="{{event.id}}">
                     <td>{{event.number}}</td>
                     <td>{{event.doc_name}}</td>
-                    <td>{{event.window.date}}</td>
+                    <td>{{event.window.date.year }}-{{event.window.date.month }}-{{event.window.date.day }}</td>
                     <td>{{event.window.time}}</td>
                     <td>{{event.window.place}}</td>
                     <td>{{event.email}}</td>
                     <td>{{event.phone_number}}</td>
                     <td>{{event.name}}</td>
-                    <td><a href="{% url 'event' pk=event.id %}"><button type="submit">Просм</button></td>
+                    {% if user.if_staff or user.is_superuser%}
+                    {% if event.performer %}
+                    {% if event.performer == user %}
+                    <td>
+                        <button data-event='{{event.toJSON|safe}}' value="0" type="submit" onclick='cancelWork(this)'
+                            style="background-color: red;">Отмена
+                    </td>
+                    {% else %}
+                    <td><button data-event='{{event.toJSON|safe}}' style="background-color: orange; cursor: auto;"
+                            type="submit" value="2" onchange="" disabled>Занято
+                    </td>
+                    {% endif %}
+                    {% else %}
+                    <td><button data-event='{{event.toJSON|safe}}' type="submit" value="1"
+                            onclick="takeWork(this)">Занять
+                    </td>
+                    {% endif %}
+                    {% endif %}
+
+                    <td><a href="{% url 'event' pk=event.id %}"><button type="submit">Просм</button>
+                    </td>
 
                     <!-- {% if request.user.is_superuser or request.user.is_staff %}
                     <td class="download-cell"><a href="#" class="download-button">Ред</a></td>
@@ -67,25 +164,27 @@
                 {% endfor %}
             </table>
             {% if user.is_superuser or user.is_staff%}
-            <h3 style="margin-bottom: 0; font-style:italic;">Добавление свободных окон</h3>
-            <form method="POST" style="text-align: left;">
+            <h3 style="margin-bottom: 0; font-style:normal;">Добавление свободных окон</h3>
+            <form method="POST" style="text-align: left;" id="window-form">
                 {% csrf_token %}
-                <p><span style=" color: red">*</span> {{ form.date.label }}</p><br>
-                {{ form.date }}<br>
-                <p><span style="color: red">*</span> {{ form.time.label }}</p><br>
-                {{ form.time }}<br>
-                <p><span style="color: red">*</span> {{ form.place.label }}</p><br>
-                {{ form.place }}<br>
+                <p><span style=" color: red">*</span> {{ form.date.label }}</p>
+                {{ form.date }}
+                <p><span style="color: red">*</span> {{ form.time.label }}</p>
+                {{ form.time }}
+                <p><span style="color: red">*</span> {{ form.place.label }}</p>
+                {{ form.place }}
+                <p>{{ message }}</p>
+                <br>
                 <button type="submit">Отправить</button>
             </form>
             <br>
-            <h3 style="margin-bottom: 0; font-style:italic;">Cвободные окна</h3>
-            <table border="1">
+            <h3 style=" margin-bottom: 0; font-style:normal;">Cвободные окна</h3> <br>
+            <table border="1" class="table table-striped">
                 <tr>
                     <td>Дата</td>
                     <td>Время</td>
                     <td>Место</td>
-
+                    <td></td>
                 </tr>
                 {% for window in windows %}
                 <tr>
@@ -103,4 +202,187 @@
     </div>
 </div>
 <br>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+    crossorigin="anonymous"></script>
 {% endblock %}
+
+{% block footer %}
+
+<script>
+
+    const table = document.getElementById("event-table").rows;
+
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/'
+    );
+
+    function cancelWork(el) {
+        chatSocket.send(JSON.stringify({
+            'type': 'change-performer',
+            'event': el.getAttribute('data-event'),
+            'performer': null,
+            'user': `{{user.toJSON|safe}}`
+        }));
+    }
+
+    function takeWork(el) {
+        chatSocket.send(JSON.stringify({
+            'type': 'change-performer',
+            'event': el.getAttribute('data-event'),
+            'performer': `{{user.toJSON|safe}}`,
+            'user': `{{user.toJSON|safe}}`
+        }));
+    }
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        if (data.type === 'change_performer') {
+            changePerformer(data);
+        }
+    }
+
+    function createGreen(data) {
+        var d = document.createElement('button');
+        d.setAttribute('data-event', `${data}`);
+        d.setAttribute('value', '1');
+        d.setAttribute('type', 'submit');
+        d.setAttribute('onclick', 'takeWork(this)');
+        d.innerHTML = 'Занять';
+        return d;
+    }
+
+    function createOrange(data) {
+        var d = document.createElement('button');
+        d.setAttribute('data-event', `${data}`);
+        d.setAttribute('value', '2');
+        d.setAttribute('type', 'submit');
+        d.setAttribute('style', "background-color: orange; cursor: auto;");
+        d.disabled = true;
+        d.innerHTML = 'Занято';
+        return d;
+    }
+
+    function createRed(data) {
+        var d = document.createElement('button');
+        d.setAttribute('data-event', `${data}`);
+        d.setAttribute('value', '0');
+        d.setAttribute('type', 'submit');
+        d.setAttribute('style', "background-color: red;");
+        d.setAttribute('onclick', 'cancelWork(this)');
+        d.innerHTML = 'Отмена';
+        return d;
+    }
+
+    function changePerformer(jsonData) {
+        var eventForButton = JSON.parse(jsonData.event)
+        var event = eventForButton[0];
+        var user = JSON.parse(jsonData.user)[0];
+        for (var i = 1; i < table.length; i++) {
+            var row = table[i];
+            var id = row.getAttribute('value');
+            if (id == event['pk']) {
+
+                var performer = JSON.parse(jsonData.performer);
+                var newButton;
+                if (performer == null) {
+                    newButton = createGreen(JSON.stringify(eventForButton));
+                } else if (`{{user.id}}` == performer[0]['pk']) {
+                    newButton = createRed(JSON.stringify(eventForButton));
+                } else {
+                    newButton = createOrange(JSON.stringify(eventForButton));
+                }
+                var button = row.getElementsByTagName("button")[0];
+                button.parentNode.replaceChild(newButton, button);
+                return;
+            }
+        }
+    }
+
+
+
+    const startTime = document.getElementById('start-time')
+    const startDate = document.getElementById('start-date')
+    const endTime = document.getElementById('end-time')
+    const endDate = document.getElementById('end-date')
+
+    const timeElapsed = Date.now();
+    var today = new Date(timeElapsed);
+    var today_string = today.toLocaleDateString()
+
+    startDate.value = `${today_string.split(".")[2]}-${today_string.split(".")[1]}-${today_string.split(".")[0]}`
+    today.setDate(today.getDate() + 7);
+    today_string = today.toLocaleDateString()
+    endDate.value = `${today_string.split(".")[2]}-${today_string.split(".")[1]}-${today_string.split(".")[0]}`
+
+    startTime.value = "00:00"
+    endTime.value = "00:00"
+
+    const sortPlace = document.getElementById("sort-place")
+    const sortDate = document.getElementById("sort-date")
+
+    Filter();
+
+    function placeIsCorrect(row) {
+        var value = row.getElementsByTagName("td")[4].innerHTML;
+        var currentValue = document.getElementById("place").value;
+        if (value == currentValue | currentValue == "") {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function timeIsCorrect(row) {
+        const time = startTime.value;
+        const date = startDate.value;
+
+        const eTime = endTime.value;
+        const eDate = endDate.value;
+
+        var startDateTime = new Date(`${date} ${time}`)
+        var endDateTime = new Date(`${eDate} ${eTime}`)
+
+        var dateCell = row.getElementsByTagName("td")[2];
+        var timeCell = row.getElementsByTagName("td")[3];
+
+        var cellDateTime = new Date(`${dateCell.innerHTML} ${timeCell.innerHTML}:00`);
+        if (startDateTime.getTime() <= cellDateTime.getTime() && cellDateTime.getTime() <= endDateTime.getTime()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function Filter() {
+        for (var i = 1; i < table.length; i++) {
+            var row = table[i];
+            if (timeIsCorrect(row) && placeIsCorrect(row)) {
+                row.style.display = '';
+            } else {
+                row.style.display = "none";
+            }
+        }
+    }
+
+    $('th').click(function () {
+        var table = $(this).parents('table').eq(0)
+        var rows = table.find('tr:gt(0)').toArray().sort(comparer($(this).index()))
+        this.asc = !this.asc
+        if (!this.asc) { rows = rows.reverse() }
+        for (var i = 0; i < rows.length; i++) { table.append(rows[i]) }
+    })
+
+    function comparer(index) {
+        return function (a, b) {
+            var valA = getCellValue(a, index), valB = getCellValue(b, index)
+            return $.isNumeric(valA) && $.isNumeric(valB) ? valA - valB : valA.toString().localeCompare(valB)
+        }
+    }
+    function getCellValue(row, index) { return $(row).children('td').eq(index).text() }
+
+</script>
+
+{% endblock%}

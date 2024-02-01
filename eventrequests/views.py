@@ -15,6 +15,8 @@ from .models import Signatory, Event, AvWindow, HonoredGuest
 from .forms import EventForm, SignatoryFormset, HonoredGuestFormset
 from iqprotocolapplication.settings import TEMPLATES_DIR
 
+from django.views.decorators.csrf import csrf_exempt
+
 
 @login_required
 def delete_window(request, *args, **kwargs):
@@ -34,13 +36,14 @@ def create_event(request):
             request.GET or None, queryset=Event.objects.none(), prefix="sig")
 
     elif request.method == 'POST':
-
         eventform = EventForm(request.POST)
         formset = SignatoryFormset(request.POST, prefix="sig")
         guests_formset = HonoredGuestFormset(request.POST, prefix="guests")
         if eventform.is_valid() and formset.is_valid() and guests_formset.is_valid():
             save_stack = []
             event = eventform.save(commit=False)
+
+            event.time_for_speakers = request.POST.get("time_for_speakers")
 
             event.user = request.user
             save_stack.append(event)
@@ -57,8 +60,14 @@ def create_event(request):
                     signatory.event = event
                     save_stack.append(signatory)
                     num += 1
-            for element in save_stack:
-                element.save()
+            try:
+                for element in save_stack:
+                    element.save()
+            except Exception:
+                for element in save_stack:
+                    if len(type(element).object.filter(id == element.id)):
+                        type(element).object.filter(id == element.id).delete()
+
             if request.POST.get('participant1-name', 1):
 
                 name = request.POST.get('participant1-name')
@@ -69,19 +78,19 @@ def create_event(request):
                                                      signatory_name=name,
                                                      signatory_middlename=middlename, position=request.POST['participant1-position'], is_speaker=True, is_additional_speaker=True, event=event)
 
-            content = render_to_string(os.path.join(str(TEMPLATES_DIR), 'account/email/event_created.txt'), context={
-                'event_id': event.id, 'request': RequestContext(request)})
-            subject = render_to_string(os.path.join(
-                str(TEMPLATES_DIR), 'account/email/event_created_subject.txt'))
+            # content = render_to_string(os.path.join(str(TEMPLATES_DIR), 'account/email/event_created.txt'), context={
+            #     'event_id': event.id, 'request': RequestContext(request)})
+            # subject = render_to_string(os.path.join(
+            #     str(TEMPLATES_DIR), 'account/email/event_created_subject.txt'))
 
-            message = EmailMultiAlternatives(
-                subject=subject,
-                body=strip_tags(content),
-                from_email=None,
-                to=(request.user.email,)
-            )
-            message.attach_alternative(content, "text/html")
-            message.send()
+            # message = EmailMultiAlternatives(
+            #     subject=subject,
+            #     body=strip_tags(content),
+            #     from_email=None,
+            #     to=(request.user.email,)
+            # )
+            # message.attach_alternative(content, "text/html")
+            # message.send()
 
             return HttpResponseRedirect(reverse("account"))
 
@@ -100,7 +109,7 @@ def show_event(request, *args, **kwargs):
         honored_guests = HonoredGuest.objects.filter(event=event)
         speakers = Signatory.objects.filter(
             event=event).filter(is_speaker=True)
-        if event.user == request.user or request.user.is_super or request.user.is_employee:
+        if event.user == request.user or request.user.is_superuser or request.user.is_staff:
             return render(request, template_name=template_name, context={'event': event, 'signatories': signatories, 'honored_guests': honored_guests, 'speakers': speakers})
         else:
             return Http404

@@ -1,31 +1,39 @@
 import uuid
+import datetime
 
 from django.db import models
+from django.core import serializers
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
 
 class AvWindow(models.Model):
-    id = models.AutoField(primary_key=True)
-
     date = models.DateField()
     time = models.TimeField()
-    place = models.CharField(max_length=255, blank=False)
+    place = models.CharField(max_length=255, blank=True, default='')
 
     def __str__(self):
-        return str(self.date) + " " + str(self.time) + " " + str(self.place)
+        res = str(self.date) + " " + str(self.time) + " " + str(self.place)
+        events = Event.objects.all()
+        for event in events:
+            if (event.window == self):
+                res += " - Занято"
+                break
+        else:
+            res += " - Свободно"
+        return res
+
+    def toJSON(self):
+        serialized_obj = serializers.serialize(
+            'json', [self,], fields=['id', 'date', 'time', 'place'])
+        return serialized_obj
 
     class Meta:
         verbose_name = 'Окна (дата, время, место)'
 
 
 class Event(models.Model):
-    id = models.UUIDField(_('id'),
-                          primary_key=True,
-                          default=uuid.uuid4,
-                          editable=False,
-                          db_index=True,
-                          unique=True,)
+
     number = models.IntegerField()
 
     customer_name = models.CharField(
@@ -33,12 +41,12 @@ class Event(models.Model):
     doc_name = models.CharField(max_length=255, blank=False,
                                 verbose_name="Полное наименование подписываемого документа")
     window = models.OneToOneField(
-        AvWindow, on_delete=models.CASCADE, related_name='event', verbose_name="Дата, время, место (из доступных)")
+        AvWindow, on_delete=models.CASCADE, related_name='event', verbose_name="Дата, время, место")
 
     presents = models.BooleanField(
         default=False, verbose_name="Обмен подарками во время церемонии")
     press_briefing = models.BooleanField(
-        default=False, verbose_name="Предоставить возможность прессе задавать вопросы после церемонии")
+        default=False, verbose_name="Пресс-подход (наличие прессы обеспечивает заказчик)")
     is_online = models.BooleanField(
         default=False, verbose_name="Одна из сторон подписывает соглашение онлайн")
     resp_is_repr = models.BooleanField(
@@ -56,7 +64,7 @@ class Event(models.Model):
         max_length=255, blank=False, verbose_name='Email')
 
     time_for_speakers = models.CharField(
-        max_length=255, blank=True, default='', verbose_name='Слово предоставляется')
+        max_length=255, blank=True, null=True, default='', verbose_name='Слово предоставляется')
 
     repr_name = models.CharField(
         max_length=255, blank=True, default='', verbose_name="Фамилия, имя, отчество (полностью)")
@@ -69,17 +77,23 @@ class Event(models.Model):
     repr_email = models.EmailField(
         max_length=255, blank=True, default='', verbose_name="Email")
 
-    honored_guests_format = models.BooleanField(default=False)
+    honored_guests_format = models.BooleanField(
+        default=False, verbose_name="Формат почётных гостей")
+
+    performer = models.ForeignKey(
+        get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name="Исполнитель")
 
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="events")
 
     def save(self, *args, **kwargs):
-        self.object_list = self.objects.order_by('number')
-        if len(self.object_list) == 0:  # if there are no objects
-            self.number = 1
-        else:
-            self.number = self.object_list.last().number + 1
+
+        self.object_list = Event.objects.order_by('number')
+        if not self.number:
+            if len(self.object_list) == 0:
+                self.number = 1
+            else:
+                self.number = self.object_list.last().number + 1
         if self.resp_is_repr:
             self.repr_name = self.name
             self.repr_org_name = self.org_name
@@ -88,19 +102,38 @@ class Event(models.Model):
             self.repr_email = self.email
         super(Event, self).save(*args, **kwargs)
 
+    def toJSON(self):
+        serialized_obj = serializers.serialize(
+            'json', [self,], fields=['id', 'window', 'user', 'performer'])
+        return serialized_obj
+
     class Meta:
-        verbose_name_plural = "Форумы"
+        verbose_name = "Событие"
+        verbose_name_plural = "События"
+
+
+class Subceremony(models.Model):
+    name = models.CharField(
+        max_length=255, blank=True, default='', verbose_name="Название")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, verbose_name="Событие")
+
+    class Meta:
+        verbose_name = "Вагон"
+        verbose_name_plural = "Вагоны"
+
+
+class Speaker(models.Model):
+    name = models.CharField(
+        max_length=255, default=None, verbose_name="ФИО")
+    position = models.CharField(
+        max_length=255, blank=False, verbose_name="Должность с указанием организации.")
+    event = models.ForeignKey(
+        Event, on_delete=models.CASCADE, related_name="speakers")
 
 
 class Signatory(models.Model):
-    id = models.UUIDField(_('id'),
-                          primary_key=True,
-                          default=uuid.uuid4,
-                          editable=False,
-                          db_index=True,
-                          unique=True,)
-
-    org_name = models.CharField(max_length=255, blank=True,
+    org_name = models.CharField(max_length=255,
                                 verbose_name="Наименование стороны – участника подписания соглашения", default='')
     position = models.CharField(
         max_length=255, blank=False, verbose_name="Должность подписанта")
@@ -115,13 +148,8 @@ class Signatory(models.Model):
     signatory_name_translate = models.CharField(
         max_length=255, blank=True, verbose_name="ФИО на англ", default='')
 
-    is_speaker = models.BooleanField(
-        default=False, verbose_name="Предоставить слово участнику")
-    is_additional_speaker = models.BooleanField(
-        default=False, verbose_name="Участнику предоставленно слово, но сам он не учавствует в конференции (достаточно указать ФИО и должность, остальные поля - прочерки)")
-
-    event = models.ForeignKey(
-        Event, on_delete=models.CASCADE, related_name="signatories")
+    subceremony = models.ForeignKey(
+        Subceremony, on_delete=models.CASCADE, related_name="signatories")
 
     class Meta:
         verbose_name_plural = "Участники Форума"

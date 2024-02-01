@@ -11,7 +11,7 @@ CustomUser = get_user_model()
 class CustomUserAdmin(UserAdmin):
 
     model = CustomUser
-    list_display = ('email', 'is_active', 'is_superuser', 'is_staff')
+    list_display = ('email', 'id', 'is_active', 'is_superuser', 'is_staff')
     ordering = ('email',)
 
     fieldsets = (

@@ -12,9 +12,8 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" action="">
+<form method="POST" action="" name="form">
     {% csrf_token %}
-
     <div>
         <h2 class="heading">Вводные данные по церемонии</h2>
 
@@ -225,6 +224,14 @@
 
 </div>
 <script>
+
+    function submitForm() {
+        var frm = document.getElementsByName('form')[0];
+        frm.submit(); // Submit the form
+        frm.reset();  // Reset all form data
+        return false; // Prevent page refresh
+    }
+
     const addMoreBtn = document.getElementById("add-form");
     const removeBtn = document.getElementById("remove-form");
     const totalNewForms = document.getElementById("id_sig-TOTAL_FORMS");
