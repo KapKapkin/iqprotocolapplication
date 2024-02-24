@@ -12,6 +12,8 @@ class AvWindow(models.Model):
     time = models.TimeField()
     place = models.CharField(max_length=255, blank=True, default='')
 
+    objects = models.Manager()
+
     def __str__(self):
         res = str(self.date) + " " + str(self.time) + " " + str(self.place)
         events = Event.objects.all()
@@ -63,13 +65,13 @@ class Event(models.Model):
     email = models.EmailField(
         max_length=255, blank=False, verbose_name='Email')
 
-    time_for_speakers = models.CharField(
-        max_length=255, blank=True, null=True, default='', verbose_name='Слово предоставляется')
+    time_for_speakers = models.IntegerField(
+        blank=True, null=True, default=0, verbose_name='Слово предоставляется')
 
     repr_name = models.CharField(
         max_length=255, blank=True, default='', verbose_name="Фамилия, имя, отчество (полностью)")
     repr_org_name = models.CharField(
-        max_length=255, blank=True, default='', verbose_name=" Организация")
+        max_length=255, blank=True, default='', verbose_name="Организация")
     repr_position = models.CharField(
         max_length=255, blank=True, default='', verbose_name="Должность")
     repr_phone_number = models.CharField(
@@ -77,8 +79,8 @@ class Event(models.Model):
     repr_email = models.EmailField(
         max_length=255, blank=True, default='', verbose_name="Email")
 
-    honored_guests_format = models.BooleanField(
-        default=False, verbose_name="Формат почётных гостей")
+    honored_guests_format = models.IntegerField(
+        default=0, verbose_name="Формат почётных гостей")
 
     performer = models.ForeignKey(
         get_user_model(), on_delete=models.SET_NULL, null=True, verbose_name="Исполнитель")
@@ -86,8 +88,9 @@ class Event(models.Model):
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="events")
 
-    def save(self, *args, **kwargs):
+    objects = models.Manager()
 
+    def save(self, *args, **kwargs):
         self.object_list = Event.objects.order_by('number')
         if not self.number:
             if len(self.object_list) == 0:
@@ -108,19 +111,21 @@ class Event(models.Model):
         return serialized_obj
 
     class Meta:
-        verbose_name = "Событие"
-        verbose_name_plural = "События"
+        verbose_name = _("Событие")
+        verbose_name_plural = _("События")
 
 
 class Subceremony(models.Model):
-    name = models.CharField(
-        max_length=255, blank=True, default='', verbose_name="Название")
+    discription = models.CharField(
+        max_length=255, default='-', verbose_name="Описание")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, verbose_name="Событие")
 
+    objects = models.Manager()
+
     class Meta:
-        verbose_name = "Вагон"
-        verbose_name_plural = "Вагоны"
+        verbose_name = _("Вагон")
+        verbose_name_plural = _("Вагоны")
 
 
 class Speaker(models.Model):
@@ -130,6 +135,12 @@ class Speaker(models.Model):
         max_length=255, blank=False, verbose_name="Должность с указанием организации.")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="speakers")
+
+    objects = models.Manager()
+
+    class Meta:
+        verbose_name = _("Спикер")
+        verbose_name_plural = _("Спикеры")
 
 
 class Signatory(models.Model):
@@ -151,8 +162,11 @@ class Signatory(models.Model):
     subceremony = models.ForeignKey(
         Subceremony, on_delete=models.CASCADE, related_name="signatories")
 
+    objects = models.Manager()
+
     class Meta:
-        verbose_name_plural = "Участники Форума"
+        verbose_name = _('Участник форума')
+        verbose_name_plural = _("Участники форума")
 
 
 class HonoredGuest(models.Model):
@@ -169,5 +183,8 @@ class HonoredGuest(models.Model):
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, related_name="honored_guests")
 
+    objects = models.Manager()
+
     class Meta:
+        verbose_name = _("Почётный гость")
         verbose_name_plural = "Почётные гости"

@@ -55,11 +55,12 @@ class SubceremonyInline(nested_admin.NestedStackedInline):
 
 
 class EventAdminForm(forms.ModelForm):
-    CHOICES1 = [(True, 'Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов'),
-                (False, 'Присутствуют в зале, представляются модератором, но не выходят на сцену')]
-    CHOICES2 = [('В начале церемонии', 'В начале церемонии'),
-                ('В конце церемонии', 'В конце церемонии'),
-                ('Не предоставляется', 'Не предоставляется')]
+    CHOICES1 = [(1, 'Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов'),
+                (2, 'Присутствуют в зале, представляются модератором, но не выходят на сцену'),
+                (0, 'Не присутствуют')]
+    CHOICES2 = [(1, 'В начале церемонии'),
+                (2, 'В конце церемонии'),
+                (0, 'Не предоставляется')]
 
     honored_guests_format = forms.ChoiceField(
         required=True,
@@ -73,7 +74,7 @@ class EventAdminForm(forms.ModelForm):
         widget=forms.RadioSelect,
         choices=CHOICES2
     )
-    perfromer = forms.ModelChoiceField(required=False, queryset=get_user_model(
+    performer = forms.ModelChoiceField(required=False, label="Исполнитель", queryset=get_user_model(
     ).objects.filter(Q(is_superuser=True) | Q(is_staff=True)))
 
 

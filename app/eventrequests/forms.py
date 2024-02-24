@@ -1,9 +1,11 @@
+from typing import Any
 from django import forms
-from django.forms import modelformset_factory
+from django.forms import inlineformset_factory, modelformset_factory
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from django.forms.models import BaseInlineFormSet
 
-from .models import Event, Signatory, HonoredGuest, AvWindow
+from .models import Event, Signatory, HonoredGuest, AvWindow, Subceremony, Speaker
 
 CustomUser = get_user_model()
 
@@ -44,8 +46,9 @@ class EventForm(forms.ModelForm):
         label="Слово предоставляется:",
         widget=forms.RadioSelect,
         choices=[
-            ('В конце церемонии', 'В конце церемонии'),
-            ('В начале церемонии', 'В начале церемонии')
+            (1, 'В начале церемонии'),
+            (2, 'В конце церемонии'),
+            (0, 'Не предоставляется')
         ],
     )
     resp_is_repr = forms.ChoiceField(
@@ -63,8 +66,9 @@ class EventForm(forms.ModelForm):
         label="Формат участия почетных гостей",
         widget=forms.RadioSelect,
         choices=[
-            (True, 'Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов'),
-            (False, 'Присутствуют в зале, представляются модератором, но не выходят на сцену')
+            (1, 'Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов'),
+            (2, 'Присутствуют в зале, представляются модератором, но не выходят на сцену'),
+            (0, 'Не присутствуют')
         ],
         initial=True,
     )
@@ -136,7 +140,6 @@ class EventForm(forms.ModelForm):
             'rows': 1,
             'cols': 30,
             'placeholder': "Введите текст:",
-
         }))
     repr_position = forms.CharField(
         required=False,
@@ -167,7 +170,6 @@ class EventForm(forms.ModelForm):
         }))
 
     class Meta:
-
         model = Event
         fields = ('customer_name',
                   'doc_name',
@@ -181,6 +183,11 @@ class EventForm(forms.ModelForm):
                   'position',
                   'phone_number',
                   'email',
+                  'repr_name',
+                  'repr_org_name',
+                  'repr_position',
+                  'repr_phone_number',
+                  'repr_email',
                   'honored_guests_format',)
 
         labels = {'customer_name': "Название организации-заказчика:",
@@ -203,6 +210,23 @@ class EventForm(forms.ModelForm):
             }),
 
         }
+
+
+class SubceremonyForm(forms.ModelForm):
+    discription = forms.CharField(
+        label="Описание",
+        widget=forms.Textarea(attrs={
+            'class': 'form-application',
+            'rows': 1,
+            'cols': 30,
+            'placeholder': "Введите текст:"
+        }))
+
+    class Meta:
+        model = Subceremony
+        fields = [
+            'discription',
+        ]
 
 
 class SignatoryForm(forms.ModelForm):
@@ -307,8 +331,82 @@ class HonoredGuestForm(forms.ModelForm):
         ]
 
 
-SignatoryFormset = modelformset_factory(
-    model=Signatory,
+class SpeakerForm(forms.ModelForm):
+    name = forms.CharField(
+        label="Фамилия, имя, отчество:",
+        widget=forms.Textarea(attrs={
+            'class': 'form-application',
+            'rows': 1,
+            'cols': 30,
+            'placeholder': "Введите текст:"
+        }))
+
+    position = forms.CharField(
+        required=False,
+        label="Должность с указанием организации:",
+        widget=forms.Textarea(attrs={
+            'class': 'form-application',
+            'rows': 1,
+            'cols': 30,
+            'placeholder': "Введите текст:"
+        }))
+
+    class Meta:
+        model = HonoredGuest
+        fields = [
+            'name',
+            'position',
+        ]
+
+
+class BaseSubceremonyFormset(BaseInlineFormSet):
+    def add_fields(self, form: Any, index: Any) -> None:
+        super(BaseSubceremonyFormset, self).add_fields(form, index)
+
+        form.nested = SignatoryFormset(
+            instance=form.instance,
+            data=form.data if form.is_bound else None,
+            files=form.files if form.is_bound else None,
+            prefix='signatory-%s-%s' % (
+                form.prefix,
+                SignatoryFormset.get_default_prefix()),
+        )
+
+    def is_valid(self):
+        result = super(BaseSubceremonyFormset, self).is_valid()
+        if self.is_bound:
+            for form in self.forms:
+                if hasattr(form, 'nested'):
+                    result = result and form.nested.is_valid()
+        return result
+
+    def save(self, commit=True):
+        result = super(BaseSubceremonyFormset, self).save(commit=commit)
+        for form in self.forms:
+
+            if hasattr(form, 'nested'):
+                if not self._should_delete_form(form):
+                    object = form.nested.save(commit=commit)
+                    print(object)
+
+        return result
+
+
+SubceremonyFormset = inlineformset_factory(
+    Event,
+    Subceremony,
+    form=SubceremonyForm,
+    formset=BaseSubceremonyFormset,
+    min_num=1,
+    extra=0,
+    fields=['discription',],
+    can_delete=False,
+
+)
+
+SignatoryFormset = inlineformset_factory(
+    Subceremony,
+    Signatory,
     form=SignatoryForm,
     fields=[
         'org_name',
@@ -319,9 +417,10 @@ SignatoryFormset = modelformset_factory(
         'signatory_middlename',
         'signatory_name_translate',
     ],
-    extra=0,
     min_num=2,
-    max_num=30,)
+    max_num=30,
+    extra=0,
+    can_delete=False,)
 
 HonoredGuestFormset = modelformset_factory(
     model=HonoredGuest,
@@ -330,5 +429,19 @@ HonoredGuestFormset = modelformset_factory(
         'name',
         'position',
     ],
-    max_num=10
+    max_num=10,
+    min_num=0,
+    extra=0
+)
+
+SpeakerFormset = modelformset_factory(
+    model=Speaker,
+    form=SpeakerForm,
+    fields=[
+        'name',
+        'position',
+    ],
+    max_num=10,
+    min_num=0,
+    extra=0
 )

@@ -1,0 +1,652 @@
+{% extends 'index.html' %}
+{% load static %}
+
+
+{% block title%}Заявка{% endblock %}
+
+{% block header1 %}Заявка{% endblock %}
+{% block header2 %}на протокольно-организационное сопровождение{% endblock %}
+{% block header3 %}церемонии подписания соглашения{% endblock %}
+
+{% block extend_head %}
+<script src="https://services.cognitoforms.com/s/VSqLsE7970G2a-Ir3-x6cg"></script>
+
+
+{% endblock %}
+
+{% block content %}
+<form method="POST" action="" name="form">
+    {% csrf_token %}
+    <div>
+        <h2 class="heading">Вводные данные по церемонии</h2>
+
+        <p><span style="color: red">*</span> {{form.customer_name.label}}</p><br>
+        {{form.customer_name}}
+        <p><span style="color: red">*</span> {{form.doc_name.label}}</p><br>
+        {{form.doc_name}}
+        <p><span style="color: red">*</span> {{form.window.label}}</p><br>
+        {{form.window}}
+
+
+        <h2 class="heading">Информация о сторонах - участниках подписания:</h2>
+        <p>Количество подписаний с разным списком участников:</p> <br>
+
+
+
+        <div class="form-row">
+
+            {{subceremonies_formset.management_form}}
+            {% if form.non_field_errors %}
+            <div class="non-field-errors">
+                {% for err in form.non_field_errors %}
+                <p class="form-error">{{ err }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+
+            <button type="button" id="remove-subceremony">-</button>
+            <input type="number" min="1" max="15" value="1" readonly class="raz" id="subceremony-counter">
+            <button type="button" id="add-subceremony">+</button>
+            <hr>
+            <div id="subceremonies">
+                {% for subceremony_form in subceremonies_formset.forms %}
+                <div class="subceremony" id="subceremony-0">
+                    <h2 class="heading">Церемония {{ forloop.counter }}</h2>
+                    {{subceremony_form}}
+                    {% if subceremony_form.nested%}
+                    {{ subceremony_form.nested.management_form }}
+                    {{ subceremony_form.nested.non_form_errors }}
+                    <p>Количество сторон-участников подписания:</p> <br>
+                    <button type="button" class="remove-form"
+                        prefix="signatory-subceremony-{{forloop.counter0}}-signatories">-</button>
+                    <input type="number" min="2" max="30" value="2" readonly class="raz form-counter"
+                        id="signatory-subceremony-counter-{{forloop.counter0}}">
+                    <button type="button" class="add-form"
+                        prefix="signatory-subceremony-{{forloop.counter0}}-signatories">+</button>
+                    <hr>
+                    <div id="signatory-subceremony-{{forloop.counter0}}-signatories">
+                        {% with outer_loop=forloop%}
+                        {% for signatory_form in subceremony_form.nested.forms %}
+
+                        <div class="signatory">
+                            <h2 style="font-style:italic;">Сторона подписания {{ forloop.counter }}</h2>
+                            {% for field in signatory_form %}
+                            {% if field.label != 'Id' and field.label != 'Subceremony' %}
+                            <p><span style="color: red">*</span> {{field.label}}</p> <br>
+                            {{ field }}
+                            <br>
+                            {% endif %}
+                            {% endfor %}
+                            <hr>
+                        </div>
+                        {% endfor %}
+                        {% endwith %}
+                    </div>
+                </div>
+                {% endif %}
+
+                {% endfor %}
+            </div>
+
+        </div>
+
+    </div>
+    <h2 class="heading">Дополнительные опции (при наличии)</h2>
+    <hr>
+
+    <h2 class="heading">Почетные гости</h2>
+    {{ guests_formset.management_form }}
+    {{ guests_formset.non_form_errors }}
+
+
+    <p><span style="color: red">*</span> {{ form.honored_guests_format.label }}</p><br>
+    {{ form.honored_guests_format }}<br>
+
+    <div class="form-row hidden" id="honoredGuestsForm">
+        <p><b>Количество почетных гостей</b></p><br>
+        <button type="button" id="remove-guest">-</button>
+        <input type="number" min="0" max="10" value="0" readonly class="raz" id="guests-counter">
+        <button type="button" id="add-guest">+</button>
+        <hr>
+
+    </div>
+    <div id="honoredGuests">
+
+    </div>
+
+    <h2 class="heading">Обмен подарками во время церемонии</h2>
+    <p><span style="color: red">*</span> {{form.presents.label}}</p><br>
+    {{form.presents}}
+    <br>
+    <hr>
+
+    <h2 class="heading">Предоставление слова участникам церемонии</h2>
+
+    <p><span style="color: red">*</span> {{ form.time_for_speakers.label }}</p><br>
+    {{ form.time_for_speakers }}
+    <br>
+    <div id="participantsTrue" class="form-row hidden">
+        <p><span style="color: red">*</span> Дополнительный спикер (не является участником)</p><br>
+        <div>
+            <input type="radio" onclick="checkAdditionalSpeakerYes();" name="additionalSpeaker"
+                id="additionalSpeakerYes" required>Да<br>
+            <input type="radio" onclick="checkAdditionalSpeakerNo();" checked="checked" name="additionalSpeaker"
+                id="additionalSpeakerNo" required>Нет
+        </div> <br>
+
+        <button type="button" onclick="this.nextElementSibling.stepDown(); MinParticipants();">-</button>
+        <input type="number" min="0" max="10" value="0" readonly class="raz" name="quantityParticipants"
+            id="quantityParticipants">
+        <button type="button" onclick="AddParticipants(); this.previousElementSibling.stepUp();"
+            id="speakers_add">+</button>
+        <hr>
+        {{speakers_formset.management_form}}
+        {{speakers_formset.non_form_errors}}
+        <div id="participants">
+
+        </div>
+
+    </div>
+
+
+
+    <h2 class="heading">Предоставить возможность прессе задавать вопросы после церемонии</h2>
+    <p><span style="color: red">*</span> {{form.press_briefing.label}}</p><br>
+    {{form.press_briefing}}
+    <br>
+    <hr>
+    <h2 class="heading">Формат церемонии</h2>
+    <p><span style="color: red">*</span> {{form.is_online.label}}</p><br>
+    {{form.is_online}}
+    <br>
+    <hr>
+    <h2 class="heading">Контакты по заявке</h2>
+    <hr>
+    <h3 style="margin-bottom: 0; font-style:italic;">Контактные данные лица, ответственного за заявку</h3>
+    <p style="color:grey; margin-top: 0; font-size:14px; ">С этим лицом будем взаимодействовать по
+        содержанию заявки и при написании сценария</p><br>
+    <br>
+    <p><span style="color: red">*</span> {{form.name.label}}</p><br>
+    {{form.name}}
+    <br>
+    <p><span style="color: red">*</span> {{form.org_name.label}}</p><br>
+    {{form.org_name}}
+    <br>
+    <p><span style="color: red">*</span> {{form.position.label}}</p><br>
+    {{form.position}}
+    <br>
+    <p><span style="color: red">*</span> {{form.phone_number.label}}</p><br>
+    {{form.phone_number}}
+    <br>
+    <p><span style="color: red">*</span> {{form.email.label}}</p><br>
+    {{form.email}}
+    <br>
+    <hr>
+    <h3 style="margin-bottom: 0; font-style:italic;">Контактные данные представителя, присутствующего на
+        площадке Форума</h3>
+    <p style="color:grey; margin-top: 0; font-size:14px; ">С этим представителем будем связываться накануне
+        церемонии и непосредственно на площадке Форума</p><br>
+
+    <p><span style="color: red">*</span> {{form.resp_is_repr.label}}</p><br>
+    {{form.resp_is_repr}}
+    <div name="Coincidence" id="CoincidenceParticipants" class="hidden">
+        <br>
+        <p><span style="color: red">*</span> {{form.name.label}}</p><br>
+        {{form.repr_name}}
+        <br>
+        <p><span style="color: red">*</span> {{form.org_name.label}}</p><br>
+        {{form.repr_org_name}}
+        <br>
+        <p><span style="color: red">*</span> {{form.position.label}}</p><br>
+        {{form.repr_position}}
+        <br>
+        <p><span style="color: red">*</span> {{form.phone_number.label}}</p><br>
+        {{form.repr_phone_number}}
+        <br>
+        <p><span style="color: red">*</span> {{form.email.label}}</p><br>
+        {{form.repr_email}}
+        <br>
+    </div>
+    <div name="OnlineParticipant" id="OnlineParticipant"></div>
+    <br>
+    <hr>
+    <input type="checkbox" id="agreeCheckbox" required>
+    <label for="agreeCheckbox">Я согласен(на) с обработкой персональных данных</label><br>
+    <a href="ссылка_на_файл" download>Скачать файл с соглашением</a><br>
+    <p style="font-size: smaller;">Для ознакомления с политикой обработки персональных данных, пожалуйста, <a
+            href="ссылка_на_соглашение">нажмите здесь</a>.</p>
+    <br>
+
+
+    <ul class="errorlist">
+        {% if form.non_field_errors %}
+        <li>{{ form.non_field_errors }}</li>
+        {% endif %}
+        {% for field in form %}
+        {% if field.errors %}
+        <li>
+            {{ field.label }}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% for field in subceremonies_formset %}
+        {% if field.errors %}
+        <li>
+            {{ field.label }}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% for field in guests_formset %}
+        {% if field.errors %}
+        <li>
+            {{ field.label }}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        {% endfor %}
+
+        {% for field in speakers_formset %}
+        {% if field.errors %}
+        <li>
+            {{ field.label }}
+            <ul class="errorlist">
+                {% for error in field.errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </li>
+        {% endif %}
+        {% endfor %}
+    </ul>
+
+    <br>
+
+    <button type="submit">Отправить</button>
+    <br>
+    <hr>
+</form>
+
+<span> <a href="{% url 'account_logout' %}">Выход</a> <a href="{% url 'account' %}">Личный кабинет</a> </span>
+
+
+
+<div id="empty-form-guest" class="hidden">
+    <h2 style="font-style:italic;">Почётный гость <span class="name"></span>
+    </h2>
+    {% for field in guests_formset.empty_form%}
+    {% if field.label != 'Id' %}
+    <p><span style="color: red">*</span> {{field.label}}</p> <br>
+    {{ field }}
+    {% endif %}
+    {% endfor %}
+    <hr>
+</div>
+
+<div class="empty-form hidden" id="empty-signatory">
+    <h2 style="font-style:italic;">Сторона подписания <span class="name"></span>
+    </h2>
+    {% for field in subceremonies_formset.empty_form.nested.empty_form%}
+    {% if field.label != 'Id' and field.label != 'Subceremony' %}
+    <p><span style="color: red">*</span> {{field.label}}</p> <br>
+    {{ field }}
+    {% endif %}
+    {% endfor %}
+    <hr>
+</div>
+
+<div class="hidden" id="empty-subceremony">
+    <h2 class="heading">Церемония <span class="name"></span></h2>
+    <input type="hidden" name="signatory-subceremony-__prefix__-signatories-MAX_NUM_FORMS" value="30"
+        id="id_signatory-subceremony-__prefix__-signatories-MAX_NUM_FORMS">
+    <input type="hidden" name="signatory-subceremony-__prefix__-signatories-MIN_NUM_FORMS" value="2"
+        id="id_signatory-subceremony-__prefix__-signatories-MIN_NUM_FORMS">
+    <input type="hidden" name="signatory-subceremony-__prefix__-signatories-INITIAL_FORMS" value="0"
+        id="id_signatory-subceremony-__prefix__-signatories-INITIAL_FORMS">
+    <input type="hidden" name="signatory-subceremony-__prefix__-signatories-TOTAL_FORMS" value="0"
+        id="id_signatory-subceremony-__prefix__-signatories-TOTAL_FORMS">
+
+    {{subceremonies_formset.empty_form}}
+    <p>Количество сторон-участников подписания:</p> <br>
+    <button type="button" class="remove-form" prefix="signatory-subceremony-__prefix__-signatories">-</button>
+    <input type="number" min="0" max="30" value="0" readonly class="raz form-counter"
+        id="signatory-subceremony-counter-__prefix__">
+    <button type="button" class="add-form" prefix="signatory-subceremony-__prefix__-signatories">+</button>
+    <hr>
+
+    <div id="signatory-subceremony-__prefix__-signatories">
+
+    </div>
+
+</div>
+
+<script>
+
+
+
+
+    $(document).on("click", ".add-form", function (event) {
+        this.previousElementSibling.stepUp();
+        add_new_signatory($(this).attr("prefix"), $('#' + 'id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 30);
+    })
+
+    $(document).on("click", ".remove-form", function (event) {
+        this.nextElementSibling.stepDown();
+        remove_form($(this).attr("prefix"), "signatory", $('#' + 'id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 2)
+    })
+
+    $("#add-subceremony").click(function () {
+        this.previousElementSibling.stepUp();
+        add_new_form('subceremonies', 'subceremony', $('#id_subceremony-TOTAL_FORMS'), 'empty-subceremony', 15);
+        $("#subceremonies .subceremony").last().find(".add-form").click();
+        $("#subceremonies .subceremony").last().find(".add-form").click();
+        $("#subceremonies .subceremony").last().find(".add-form")
+    });
+
+    $("#remove-subceremony").click(function () {
+        this.nextElementSibling.stepDown();
+        remove_form('subceremonies', 'subceremony', $('#id_subceremony-TOTAL_FORMS'), 1);
+    });
+
+
+    function add_new_signatory(container, forms, max) {
+        var currentFormCount = parseInt(forms.attr("value"));
+        var currentFormSubCount = parseInt($('#id_subceremony-TOTAL_FORMS').attr("value"));
+
+        if (currentFormCount >= max) {
+            return false;
+        }
+
+        const formCopyTarger = document.getElementById(container);
+        const copyEmptyFormEl = document.getElementById("empty-signatory").cloneNode(true);
+        copyEmptyFormEl.setAttribute('class', 'signatory');
+        copyEmptyFormEl.setAttribute("id", "");
+        const regex = new RegExp('__prefix__');
+        for (var i = 0; i < 25; i++) {
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormSubCount - 1);
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
+        }
+        forms.attr('value', currentFormCount + 1);
+        copyEmptyFormEl.children[0].querySelector('.name').innerHTML = currentFormCount + 1;
+        formCopyTarger.append(copyEmptyFormEl);
+    }
+
+    function add_new_form(container, element, forms, template, max) {
+        var currentFormCount = parseInt(forms.attr('value'));
+        console.log(currentFormCount);
+        if (currentFormCount >= max) {
+            return false;
+        }
+
+        const formCopyTarger = document.getElementById(container);
+        const copyEmptyFormEl = document.getElementById(template).cloneNode(true);
+        copyEmptyFormEl.setAttribute('class', element);
+        copyEmptyFormEl.setAttribute("id", `${element}-${currentFormCount}`);
+        const regex = new RegExp('__prefix__', 'g');
+        copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
+        forms.attr('value', currentFormCount + 1);
+        copyEmptyFormEl.children[0].querySelector('.name').innerHTML = currentFormCount + 1;
+        formCopyTarger.append(copyEmptyFormEl);
+    }
+
+    function remove_form(container, element, forms, min) {
+        if (event) {
+            event.preventDefault();
+        }
+        const currentForms = document.getElementsByClassName(element);
+        const currentFormCount = forms.attr("value");
+        if (currentFormCount <= min) {
+            return false;
+        }
+        $(`#${container} .${element}`).last().remove();
+        forms.attr('value', currentFormCount - 1);
+
+    }
+
+    const guestCounter = document.getElementById("guests-counter");
+
+    const totalNewGuestsForms = $("#id_guests-TOTAL_FORMS");
+    totalNewGuestsForms.attr('value', 0);
+
+    $("#add-guest").on("click", function () {
+        this.previousElementSibling.stepUp();
+        add_new_form("honoredGuests", "honoredGuest", totalNewGuestsForms, "empty-form-guest", 10)
+    })
+    $("#remove-guest").on("click", function () {
+        this.nextElementSibling.stepDown();
+        remove_form("honoredGuests", "honoredGuest", totalNewGuestsForms, 0)
+    })
+
+    function checkhonoredGuestsYes() {
+        honoredGuestsForm = document.getElementById('honoredGuestsForm');
+        honoredGuestsForm.setAttribute('class', 'form-row');
+    }
+
+    $("#id_honored_guests_format_0").change(checkhonoredGuestsYes);
+    $("#id_honored_guests_format_1").change(checkhonoredGuestsYes);
+    $("#id_honored_guests_format_2").change(checkhonoredGuestsNo);
+
+    $("#id_honored_guests_format_2").prop('checked', true);
+
+    function checkhonoredGuestsNo() {
+
+        honoredGuestsForm = document.getElementById('honoredGuestsForm');
+        for (var i = 0; i < 10; i++) {
+            guestCounter.stepDown();
+        }
+        honoredGuestsForm.setAttribute('class', 'form-row hidden');
+        document.getElementById('honoredGuests').innerHTML = '';
+        totalNewGuestsForms.attr('value', 0);
+    }
+
+
+    $("#id_time_for_speakers_0").change(checkWordToTheParticipantsYes);
+    $("#id_time_for_speakers_1").change(checkWordToTheParticipantsYes);
+    $("#id_time_for_speakers_2").change(checkWordToTheParticipantsNo);
+
+    $("#id_time_for_speakers_2").prop('checked', true);
+
+    function checkWordToTheParticipantsYes()//Функция наличия слово учатникам
+    {
+        document.getElementById("participantsTrue").setAttribute("class", "");
+    }
+    function checkWordToTheParticipantsNo()//Функция отсутствия слово учатникам
+    {
+
+        var quantityParticipants = document.getElementById("quantityParticipants");
+        quantityParticipants.min = 0;
+        quantityParticipants.setAttribute("value", 1)
+
+        var removeParticipants = document.getElementById("participantsTrue");
+        var listParticipants = document.getElementById("participants");
+
+        removeParticipants.setAttribute("class", "hidden")
+        listParticipants.innerHTML = '';
+        document.getElementById("id_time_for_speakers_0").required = false;
+        document.getElementById("id_time_for_speakers_1").required = false;
+
+    }
+
+    function checkAdditionalSpeakerYes() {
+        var checkboxAdditionalSpeaker = document.getElementById("additionalSpeakerYes");
+        if (checkboxAdditionalSpeaker.checked == true) {
+            checkAdditionalSpeakerYes.disabled = true;
+            var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+            if (quantity == 0) {
+                $("#speakers_add").click();
+            }
+            var participant1 = document.getElementById('participant1');
+            const participantDiv = document.createElement('div');
+            participantDiv.innerHTML =
+                '<h2>Участник 1 (<i>Дополнительный спикер</i>)</h2>' +
+
+                '<p><span style="color: red">*</span>Фамилия, имя, отчество (при наличии):</p><br>' +
+                '<textarea name="speakers-0-name" cols="30" rows="1" class="form-application" placeholder="Введите текст:" id="id_speakers-0-name"></textarea>' +
+
+
+                '<p><span style="color: red">*</span> Должность с указанием организации:</p><br>' +
+                '<textarea name="speakers-0-position" cols="30" rows="1" class="form-application" placeholder="Введите текст:" id="id_speakers-0-position"></textarea>';
+            participant1.innerHTML = participantDiv.innerHTML;
+        }
+    }
+
+    function checkAdditionalSpeakerNo() {
+        var checkboxAdditionalSpeakerYes = document.getElementById("additionalSpeakerYes");
+        var checkboxAdditionalSpeakerNo = document.getElementById("additionalSpeakerNo");
+        if (checkboxAdditionalSpeakerNo.checked == true) {
+            checkboxAdditionalSpeakerYes.disabled = false;
+        }
+        var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+
+
+
+        var participant1 = document.getElementById('participant1');
+        const select = getSelect();
+        select.setAttribute("name", "participant1");
+        const participantDiv = document.createElement('div'); // Создание обертки для элементов
+        participantDiv.id = 'participant' + quantity;
+        participantDiv.innerHTML =
+            '<h2>Участник ' + quantity + '</h2>' +
+            '<p>Фамилия, имя, отчество:</p><br>';
+        participantDiv.appendChild(select); // Добавление элемента <select> в обертку
+        participantDiv.appendChild(document.createElement('hr'));
+        select.setAttribute('name', `speakers-0-name`);
+        participant1.innerHTML = participantDiv.innerHTML;
+    }
+
+
+
+    function getSelect() {
+        const select = document.createElement('select'); // Создание элемента <select>
+        select.className = "form-application"; // Присвоение класса
+        var res = new Set();
+
+        for (i = 0; i < 15; i++) {
+            for (j = 0; j < 30; j++) {
+                if ($(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`).length == 0) {
+                    continue;
+                }
+                const lastnameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`).val();
+                const nameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_name`).val();
+                const middleNameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_middlename`).val();
+                console.log($(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`));
+
+                if (middleNameSigning == "-" || middleNameSigning == "_") {
+                    fioSigning = lastnameSigning + " " + nameSigning;
+                } else {
+                    fioSigning = lastnameSigning + " " + nameSigning + " " + middleNameSigning;
+                }
+                res.add(fioSigning);
+            }
+        }
+        for (const item of res) {
+            console.log(item);
+            const option = document.createElement('option');
+            option.textContent = item;
+
+            select.appendChild(option);
+        }
+
+        return select;
+    }
+
+    function AddParticipants()//Функция добавления участника
+    {
+
+        var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+        const numberParticipants = document.getElementById("participants");
+        if (quantity < 10) {
+            quantity = parseInt(quantity) + 1;
+            const select = getSelect(); // Создание элемента <select>
+
+            const participantDiv = document.createElement('div'); // Создание обертки для элементов
+            participantDiv.id = 'participant' + quantity;
+            participantDiv.innerHTML =
+                '<h2>Участник ' + quantity + '</h2>' +
+                '<p>Фамилия, имя, отчество:</p><br>';
+            participantDiv.appendChild(select); // Добавление элемента <select> в обертку
+            participantDiv.appendChild(document.createElement('hr'));
+            select.setAttribute('name', `speakers-${quantity - 1}-name`);
+            numberParticipants.appendChild(participantDiv); // Добавление обертки в основной контейнер
+
+            $("#id_speakers-TOTAL_FORMS").attr("value", quantity)
+        }
+    }
+    function MinParticipants()//Функция удвления участника
+    {
+        var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+        if (quantity == 0) {
+            return;
+        }
+        let quantity1 = parseInt(quantity, 10);
+        $("#id_speakers-TOTAL_FORMS").attr("value", quantity - 1);
+        const removeDivParticipant = document.getElementById("participant" + quantity1.toString());
+        removeDivParticipant.remove();
+
+    }
+
+
+    var checkboxCoincidenceYes = document.getElementById("id_resp_is_repr_0");
+    var checkboxCoincidenceNo = document.getElementById("id_resp_is_repr_1");
+
+    checkboxCoincidenceYes.checked = true;
+    CoincidenceYes();
+
+    $("#id_resp_is_repr_0").on("change", function () {
+        if ($("#id_resp_is_repr_0").prop("checked")) {
+            CoincidenceYes();
+        }
+    })
+
+    $("#id_resp_is_repr_1").on("change", function () {
+        if ($("#id_resp_is_repr_1").prop("checked")) {
+            CoincidenceNo();
+        }
+    })
+
+    function CoincidenceNo()//Функция добавления представителя
+    {
+        const numberHonoredGuests = document.getElementById("CoincidenceParticipants");
+        numberHonoredGuests.setAttribute("class", '');
+        var ta = numberHonoredGuests.getElementsByTagName('textarea');
+        for (let element of ta) {
+            element.required = true;
+            element.value = '';
+        }
+
+
+
+    }
+
+    function CoincidenceYes()//Функция удаления представителя
+    {
+
+
+        const numberHonoredGuests = document.getElementById("CoincidenceParticipants");
+        numberHonoredGuests.setAttribute("class", "hidden");
+        var ta = numberHonoredGuests.getElementsByTagName('textarea');
+        for (let element of ta) {
+            element.required = false;
+            element.value = '';
+        }
+
+    }
+</script>
+
+
+{% endblock %}

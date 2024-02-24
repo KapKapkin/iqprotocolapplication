@@ -14,10 +14,17 @@
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>{{event.doc_name}}</textarea>
 <br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>{{event.window}}</textarea>
-
+<hr>
 <h2 class="heading">Информация о сторонах - участниках подписания:</h2>
-{% for el in signatories %}
-{% if not el.is_additional_speaker%}
+
+<hr>
+{% for ceremony in subceremonies %}
+<h2 class="heading">Церемония {{forloop.counter}}</h2>
+<p>Описание:</p><br>
+<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
+    disabled> {{ceremony.discription}}</textarea>
+<hr>
+{% for el in ceremony.signatories.all %}
 <h2 style="font-style: italic;">Сторона подписания {{ forloop.counter }}</h2>
 <p> Полное наименование стороны (организации) – участника подписания соглашения:</p>
 <br>
@@ -40,9 +47,9 @@
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled>{{el.signatory_name_translate}}</textarea>
 <hr>
-
-{% endif %}
 {% endfor %}
+{% endfor %}
+
 <h2 class="heading">Дополнительные опции</h2>
 <hr>
 
@@ -75,8 +82,20 @@
 {% if speakers %}
 <h2 class="heading">Предоставление слова участникам церемонии</h2>
 <hr><br>
+
+{% if event.time_for_speakers == 0 %}
+<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>Не присутствуют</textarea>
+{% elif event.time_for_speakers == 1 %}
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
-    disabled> {{ event.time_for_speakers }}</textarea>
+    disabled>Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов</textarea>
+
+{% else %}
+<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled> Присутствуют в зале, представляются модератором, но не выходят на сцену
+</textarea>
+{% endif %}
+
+
+{% if event.time_for_speakers != 0 %}
 <hr>
 {% for el in speakers %}
 <h2 style="font-style: italic;">Участник {{ forloop.counter }}</h2>
@@ -89,6 +108,8 @@
 {% endif %}
 <hr>
 {% endfor %}
+
+{% endif %}
 
 {% endif %}
 

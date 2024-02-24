@@ -1,0 +1,28 @@
+@media (max-width: 800px) {
+    table {
+        display: block;
+        max-width: -moz-fit-content;
+        max-width: fit-content;
+        margin: 0 auto;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+.table-container {
+    align-content: center;
+    width: auto;
+}
+
+@media (max-width: 800px) {
+
+    .table-container {
+        width: 100% !important;
+        overflow-x: scroll;
+    }
+
+    th,
+    td {
+        min-width: 200px;
+    }
+}
