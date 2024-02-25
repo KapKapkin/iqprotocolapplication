@@ -70,7 +70,7 @@
                             <td>
                                 <select name="place" id="place" class="sort-select" onchange="Filter()">
                                     <option value="">Место</option>
-                                    {% for place in places%}
+                                    {% for place in places %}
                                     <option value="{{place}}">{{place}}</option>
                                     {% endfor %}
                                 </select>
@@ -123,6 +123,7 @@
                     {% endif %}
 
                     <td> </td>
+                    <td> </td>
                 </tr>
                 {% for event in events %}
                 <tr value="{{event.id}}">
@@ -154,6 +155,10 @@
                     {% endif %}
 
                     <td><a href="{% url 'event' pk=event.id %}"><button type="submit">Просм</button>
+                    </td>
+
+                    <td><a href="{% url 'download' pk=event.id %}" target="_blank"><button type="submit"><img
+                                    src="{% static 'images/download.png' %}" /></button>
                     </td>
 
                     <!-- {% if request.user.is_superuser or request.user.is_staff %}

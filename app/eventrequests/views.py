@@ -1,14 +1,16 @@
-from django.http import HttpResponse, HttpResponseRedirect
-
+from django.http import FileResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-from django.http import Http404
+from django.templatetags.static import static
+from django.core.files.storage import default_storage
+from django.conf import settings
 
-from .models import Signatory, Event, AvWindow, HonoredGuest, Subceremony, Speaker
+import os
+from docxtpl import DocxTemplate
+
+from .models import Event, AvWindow, HonoredGuest, Subceremony, Speaker
 from .forms import EventForm, HonoredGuestFormset, SubceremonyFormset, SpeakerFormset
-
-from django.views.decorators.csrf import csrf_exempt
 
 
 @login_required
@@ -39,8 +41,6 @@ def create_event(request):
         subceremony_formset = SubceremonyFormset(
             request.POST, prefix="subceremony")
         speakers_formset = SpeakerFormset(request.POST, prefix="speakers")
-        print(event_form.is_valid(), subceremony_formset.is_valid(),
-              honoredguests_formset.is_valid(), speakers_formset.is_valid())
         if event_form.is_valid():
             event = event_form.save(commit=False)
             event.user = request.user
@@ -61,7 +61,6 @@ def create_event(request):
                         instance = instance.save(commit=False)
                         instance.event = event
                         instance.save()
-                    raise Exception('')
                 except Exception:
                     if (Event.objects.filter(id=event.id).exists()):
                         Event.objects.filter(id=event.id).delete()
@@ -100,3 +99,42 @@ def show_event(request, *args, **kwargs):
             return Http404
     except KeyError:
         return Http404
+
+
+@login_required
+def download_event(request, *args, **kwargs):
+    print(os.listdir())
+    user = request.user
+    if user.is_staff or user.is_superuser:
+        event_id = kwargs['pk']
+        event = Event.objects.get(id=event_id)
+        try:
+            path = os.path.join(settings.MEDIA_ROOT,
+                                "events/event_%s.docx" % event_id)
+            f = open(path)
+            f.close()
+        except FileNotFoundError:
+            path = create_file(event)
+        response = FileResponse(open(path, 'rb'))
+        filename = "event_%s.docx" % event_id
+        response['Content-Disposition'] = 'inline; filename=' + filename
+        return response
+    return Http404
+
+
+def create_file(event):
+    context = {}
+    context['event'] = event
+
+    context['subceremonies'] = Subceremony.objects.filter(event=event)
+    context['honoredguests'] = HonoredGuest.objects.filter(event=event)
+    context['speakers'] = Speaker.objects.filter(event=event)
+
+    doc = DocxTemplate(os.path.join(settings.STATIC_ROOT,
+                                    "textfiles/event_template.docx"))
+    doc.render(context)
+    path = os.path.join(settings.BASE_DIR,
+                        'media/events/event_%s.docx' % event.id)
+    print(path)
+    doc.save(path)
+    return path

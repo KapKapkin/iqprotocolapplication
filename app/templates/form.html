@@ -212,68 +212,68 @@
     <hr>
     <input type="checkbox" id="agreeCheckbox" required>
     <label for="agreeCheckbox">Я согласен(на) с обработкой персональных данных</label><br>
-    <a href="ссылка_на_файл" download>Скачать файл с соглашением</a><br>
     <p style="font-size: smaller;">Для ознакомления с политикой обработки персональных данных, пожалуйста, <a
-            href="ссылка_на_соглашение">нажмите здесь</a>.</p>
+            href="{% static 'textfiles/agreement.docx'%}">нажмите здесь</a>.</p>
     <br>
 
 
-    <ul class="errorlist">
-        {% if form.non_field_errors %}
-        <li>{{ form.non_field_errors }}</li>
-        {% endif %}
-        {% for field in form %}
-        {% if field.errors %}
-        <li>
-            {{ field.label }}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-        {% endfor %}
+    {% if form.non_field_errors %}
+    {{ form.non_field_errors }}
+    {% endif %}
 
-        {% for field in subceremonies_formset %}
-        {% if field.errors %}
-        <li>
-            {{ field.label }}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-        {% endfor %}
+    {% for field in form %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ error }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
 
-        {% for field in guests_formset %}
-        {% if field.errors %}
-        <li>
-            {{ field.label }}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-        {% endfor %}
+    {% for field in subceremonies_formset %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ error }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
 
-        {% for field in speakers_formset %}
-        {% if field.errors %}
-        <li>
-            {{ field.label }}
-            <ul class="errorlist">
-                {% for error in field.errors %}
-                <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </li>
-        {% endif %}
-        {% endfor %}
-    </ul>
+    {% for field in guests_formset %}
+    {% if field.errors %}
+
+
+    {% for error in field.errors %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ error }}
+    </div>
+    {% endfor %}
+
+    {% endif %}
+    {% endfor %}
+
+    {% for field in speakers_formset %}
+    {% if field.errors %}
+    {% for error in field.errors %}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        {{ error }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endfor %}
+
+    {% if success == 0%}
+    <div class="alert">
+        <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+        Ошибка. Попробуйте перезагрузить страницу.
+    </div>
+    {% endif %}
 
     <br>
 

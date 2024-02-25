@@ -50,7 +50,9 @@ def user_page(request):
 
         else:
             events = Event.objects.filter(user=current_user)
-
+        places = set()
+        for event in events:
+            places.add(event.window.place)
         if request.method == 'GET':
             form = WindowForm(request.GET)
 
@@ -71,10 +73,10 @@ def user_page(request):
                 for i in windows:
                     i_dt = to_datetime(i.date, i.time)
                     if (i.date == date):
-                        if (dt - i_dt).total_seconds() / 60 < 15:
+                        if (dt - i_dt).total_seconds() / 60 < 20:
                             message = "На данное время невозможно создать таймслот: слишком маленький интервал между событиями."
                             return render(request, template_name, {'user': current_user, 'events': events, 'form': form, 'windows': get_all_windows(), "message": message, })
                 form.save()
 
             form.clean()
-        return render(request, template_name, {'user': current_user, 'events': events, 'form': form, 'windows': get_all_windows()})
+        return render(request, template_name, {'user': current_user, 'events': events, 'form': form, 'places': places, 'windows': get_all_windows()})
