@@ -79,12 +79,12 @@
     disabled> {% if event.presents %}Да {% else%}Нет {% endif %}</textarea>
 <hr>
 
-{% if speakers %}
+
 <h2 class="heading">Предоставление слова участникам церемонии</h2>
 <hr><br>
 
 {% if event.time_for_speakers == 0 %}
-<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>Не присутствуют</textarea>
+<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled>Не предоставляется</textarea>
 {% elif event.time_for_speakers == 1 %}
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
     disabled>Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов</textarea>
@@ -100,9 +100,8 @@
 {% for el in speakers %}
 <h2 style="font-style: italic;">Участник {{ forloop.counter }}</h2>
 <p> Фамилия, имя, отчество:</p><br>
-<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
-    disabled> {{el.signatory_surname}} {{el.signatory_name}} {{el.signatory_middlename}}</textarea>
-{% if el.is_additional_speaker%}
+<textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled> {{el.name}}</textarea>
+{% if el.position|length > 0%}
 <p> Должность с указанием организации::</p><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1" disabled> {{el.position}}</textarea>
 {% endif %}
@@ -111,7 +110,6 @@
 
 {% endif %}
 
-{% endif %}
 
 
 
@@ -123,7 +121,7 @@
 <h2 class="heading">Формат церемонии</h2>
 <hr><br>
 <textarea type='text' class='form-application' maxlength="255" cols="30" rows="1"
-    disabled> {% if event.is_online %} Удаленная онлайн-церемония (одна из сторон подписывает соглашение онлайн) {% else%}Церемония сполным присутствием (все стороны присутствуют взале) {% endif %}</textarea>
+    disabled> {% if event.is_online %} Удаленная онлайн-церемония (одна из сторон подписывает соглашение онлайн) {% else%}Церемония с полным присутствием (все стороны присутствуют взале) {% endif %}</textarea>
 <hr>
 <h2 class="heading">Контакты по заявке</h2>
 <hr>

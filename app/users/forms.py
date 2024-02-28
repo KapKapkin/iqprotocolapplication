@@ -20,9 +20,9 @@ class UserSignupForm(SignupForm):
         self.fields['email'].widget = forms.TextInput(
             attrs={'type': 'text', 'class': 'form-control', 'placeholder': "Введите email"})
         self.fields['password1'].widget = forms.PasswordInput(
-            attrs={'type': 'password', 'class': 'form-control', 'placeholder': "Введите пароль", 'id': "loginPassword"})
+            attrs={'type': 'password', 'class': 'form-control', 'placeholder': "Введите пароль", 'id': "loginPassword1"})
         self.fields['password2'].widget = forms.PasswordInput(
-            attrs={'type': 'password', 'class': 'form-control', 'placeholder': "Подтвердите пароль", 'id': "loginPassword"})
+            attrs={'type': 'password', 'class': 'form-control', 'placeholder': "Подтвердите пароль", 'id': "loginPassword2"})
 
 
 class WindowForm(forms.ModelForm):

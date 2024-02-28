@@ -41,12 +41,15 @@ def create_event(request):
         subceremony_formset = SubceremonyFormset(
             request.POST, prefix="subceremony")
         speakers_formset = SpeakerFormset(request.POST, prefix="speakers")
+        print(request.POST)
         if event_form.is_valid():
             event = event_form.save(commit=False)
             event.user = request.user
             subceremony_formset = SubceremonyFormset(
                 request.POST, prefix="subceremony", instance=event)
 
+            print(event_form.is_valid(), subceremony_formset.is_valid(),
+                  honoredguests_formset.is_valid(), speakers_formset.is_valid())
             if event_form.is_valid() and subceremony_formset.is_valid() and honoredguests_formset.is_valid() and speakers_formset.is_valid():
                 try:
                     event.save()
@@ -73,14 +76,20 @@ def create_event(request):
                     })
 
                 return HttpResponseRedirect(reverse("account"))
-
+        else:
+            return render(request, template_name, {
+                'guests_formset': honoredguests_formset,
+                'subceremonies_formset': subceremony_formset,
+                'speakers_formset': speakers_formset,
+                'form': event_form,
+                'success': False,
+            })
     return render(request, template_name, {
         'guests_formset': honoredguests_formset,
         'subceremonies_formset': subceremony_formset,
         'speakers_formset': speakers_formset,
         'form': event_form,
         'success': True,
-
     })
 
 
@@ -135,6 +144,5 @@ def create_file(event):
     doc.render(context)
     path = os.path.join(settings.BASE_DIR,
                         'media/events/event_%s.docx' % event.id)
-    print(path)
     doc.save(path)
     return path

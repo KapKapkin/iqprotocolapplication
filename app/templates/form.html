@@ -50,7 +50,7 @@
             <hr>
             <div id="subceremonies">
                 {% for subceremony_form in subceremonies_formset.forms %}
-                <div class="subceremony" id="subceremony-0">
+                <div class="subceremony" id="subceremony-0" prefix="0">
                     <h2 class="heading">Церемония {{ forloop.counter }}</h2>
                     {{subceremony_form}}
                     {% if subceremony_form.nested%}
@@ -232,15 +232,13 @@
     {% endif %}
     {% endfor %}
 
-    {% for field in subceremonies_formset %}
-    {% if field.errors %}
-    {% for error in field.errors %}
+    {% for dict in subceremonies_formset.errors %}
+    {% for error in dict.values %}
     <div class="alert">
         <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
         {{ error }}
     </div>
     {% endfor %}
-    {% endif %}
     {% endfor %}
 
     {% for field in guests_formset %}
@@ -336,13 +334,9 @@
 </div>
 
 <script>
-
-
-
-
     $(document).on("click", ".add-form", function (event) {
         this.previousElementSibling.stepUp();
-        add_new_signatory($(this).attr("prefix"), $('#' + 'id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 30);
+        add_new_signatory($(this), $('#id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 30);
     })
 
     $(document).on("click", ".remove-form", function (event) {
@@ -355,7 +349,7 @@
         add_new_form('subceremonies', 'subceremony', $('#id_subceremony-TOTAL_FORMS'), 'empty-subceremony', 15);
         $("#subceremonies .subceremony").last().find(".add-form").click();
         $("#subceremonies .subceremony").last().find(".add-form").click();
-        $("#subceremonies .subceremony").last().find(".add-form")
+        $("#subceremonies .form-counter").last().attr("min", "2");
     });
 
     $("#remove-subceremony").click(function () {
@@ -366,19 +360,20 @@
 
     function add_new_signatory(container, forms, max) {
         var currentFormCount = parseInt(forms.attr("value"));
-        var currentFormSubCount = parseInt($('#id_subceremony-TOTAL_FORMS').attr("value"));
 
+        var currentFormSubCount = parseInt(container.parent().attr("prefix"));
+        console.log(currentFormSubCount)
         if (currentFormCount >= max) {
             return false;
         }
 
-        const formCopyTarger = document.getElementById(container);
+        const formCopyTarger = document.getElementById(container.attr("prefix"));
         const copyEmptyFormEl = document.getElementById("empty-signatory").cloneNode(true);
         copyEmptyFormEl.setAttribute('class', 'signatory');
         copyEmptyFormEl.setAttribute("id", "");
         const regex = new RegExp('__prefix__');
         for (var i = 0; i < 25; i++) {
-            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormSubCount - 1);
+            copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormSubCount);
             copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
         }
         forms.attr('value', currentFormCount + 1);
@@ -396,6 +391,7 @@
         const formCopyTarger = document.getElementById(container);
         const copyEmptyFormEl = document.getElementById(template).cloneNode(true);
         copyEmptyFormEl.setAttribute('class', element);
+        copyEmptyFormEl.setAttribute('prefix', currentFormCount);
         copyEmptyFormEl.setAttribute("id", `${element}-${currentFormCount}`);
         const regex = new RegExp('__prefix__', 'g');
         copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);

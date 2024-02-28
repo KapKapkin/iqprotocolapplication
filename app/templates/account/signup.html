@@ -12,6 +12,7 @@
     <title>Форма регистрации</title>
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
     <script type="text/javascript" src="{% static 'js/script.js' %}"> </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 
 </head>
 
@@ -25,12 +26,14 @@
                     {{ form.email }}<br>
                     <div class="password">
                         {{form.password1}}
-                        <a href="#" class="password-control" onclick="return show_hide_password(this);"></a><br>
+                        <a href="#" class="password-control" prefix="loginPassword1"
+                            onclick="return show_hide_password(this);"></a><br>
 
                     </div>
                     <div class="password">
                         {{form.password2}}
-                        <a href="#" class="password-control" onclick="return show_hide_password(this);"></a><br>
+                        <a href="#" class="password-control" prefix="loginPassword2"
+                            onclick="return show_hide_password(this);"></a><br>
 
                     </div>
                     <div id="error-message-log"></div> <br>
@@ -56,8 +59,7 @@
 </body>
 <script>
     function show_hide_password(target) {
-
-        var input = document.getElementById('loginPassword');
+        var input = document.getElementById(target.getAttribute("prefix"));
         if (input.getAttribute('type') == 'password') {
             target.classList.add('Eye_Open');
             input.setAttribute('type', 'text');
