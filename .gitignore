@@ -1,11 +1,7 @@
 dockerfile
-dockerfile.prod
 docker-compose.yml
-docker-compose.prod.yml
 migrations
 __pycache__
 conf.py
-**.prod**
-nginx
 staticfiles
 event_*.docx
