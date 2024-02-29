@@ -3,6 +3,7 @@ import datetime
 
 from django.db import models
 from django.core import serializers
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 
@@ -104,6 +105,9 @@ class Event(models.Model):
             self.repr_phone_number = self.phone_number
             self.repr_email = self.email
         super(Event, self).save(*args, **kwargs)
+
+    def get_absolute_url(self):
+        return reverse('event', kwargs={'pk': self.pk})
 
     def toJSON(self):
         serialized_obj = serializers.serialize(

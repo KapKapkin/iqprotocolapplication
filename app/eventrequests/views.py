@@ -12,6 +12,14 @@ from docxtpl import DocxTemplate
 from .models import Event, AvWindow, HonoredGuest, Subceremony, Speaker
 from .forms import EventForm, HonoredGuestFormset, SubceremonyFormset, SpeakerFormset
 
+from django.core.mail import EmailMessage
+
+
+def send_email(email, link):
+    email = EmailMessage(
+        'Вы отправили заявку на новое событие.', 'Здравствуйте!\n Вы получили это письмо, потому что с вашего аккаунта была отправлена заявка на протокольное сопровождение мероприятия. %s \nС уважением, IQProtocol!' % link, to=[email])
+    email.send()
+
 
 @login_required
 def delete_window(request, *args, **kwargs):
@@ -41,15 +49,11 @@ def create_event(request):
         subceremony_formset = SubceremonyFormset(
             request.POST, prefix="subceremony")
         speakers_formset = SpeakerFormset(request.POST, prefix="speakers")
-        print(request.POST)
         if event_form.is_valid():
             event = event_form.save(commit=False)
             event.user = request.user
             subceremony_formset = SubceremonyFormset(
                 request.POST, prefix="subceremony", instance=event)
-
-            print(event_form.is_valid(), subceremony_formset.is_valid(),
-                  honoredguests_formset.is_valid(), speakers_formset.is_valid())
             if event_form.is_valid() and subceremony_formset.is_valid() and honoredguests_formset.is_valid() and speakers_formset.is_valid():
                 try:
                     event.save()
@@ -74,7 +78,8 @@ def create_event(request):
                         'form': event_form,
                         'success': False,
                     })
-
+                send_email(request.user.email, request.build_absolute_uri(
+                    event.get_absolute_url()))
                 return HttpResponseRedirect(reverse("account"))
         else:
             return render(request, template_name, {
@@ -112,7 +117,6 @@ def show_event(request, *args, **kwargs):
 
 @login_required
 def download_event(request, *args, **kwargs):
-    print(os.listdir())
     user = request.user
     if user.is_staff or user.is_superuser:
         event_id = kwargs['pk']
