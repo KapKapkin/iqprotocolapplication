@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from allauth.socialaccount.models import SocialToken, SocialAccount, SocialApp
 from django.contrib import admin
 from django.urls import path, include
 from django.conf.urls.static import static
@@ -37,3 +38,8 @@ if bool(settings.DEBUG):
                           document_root=settings.MEDIA_ROOT)
     urlpatterns += static(settings.STATIC_URL,
                           document_root=settings.STATIC_ROOT)
+
+
+admin.site.unregister(SocialToken)
+admin.site.unregister(SocialAccount)
+admin.site.unregister(SocialApp)

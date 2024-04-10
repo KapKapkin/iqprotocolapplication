@@ -1,4 +1,4 @@
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
     table {
         display: block;
         max-width: -moz-fit-content;
@@ -14,7 +14,7 @@
     width: auto;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1200px) {
 
     .table-container {
         width: 100% !important;

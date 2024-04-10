@@ -112,13 +112,16 @@
                 <tr>
                     <th style="width:3%;">ID</th>
                     <th style="width:9%;">Наз. Док.</th>
-                    <th style="width:16%;">Дата</th>
+                    <th style="width:16%;">Дата проведения</th>
                     <th style="width:7%;">Время</th>
                     <th style="width:15%;">Место</th>
+                    <th style="width:16%;">Дата отправки</th>
                     <th style="width:10%;">Email</th>
                     <th style="width:15%;">Номер телефона</th>
                     <th style="width:15%;">Имя</th>
-                    {% if user.if_staff or user.is_superuser%}
+                    {% if user.if_superuser %}
+                    <th style="width:10%;">Исполнитель</th>
+                    {% elif user.is_staff %}
                     <th style="width:10%;">Исполнитель</th>
                     {% endif %}
 
@@ -132,26 +135,29 @@
                     <td>{{event.window.date.year }}-{{event.window.date.month }}-{{event.window.date.day }}</td>
                     <td>{{event.window.time}}</td>
                     <td>{{event.window.place}}</td>
+                    <td>{{event.published.date.year }}-{{event.published.date.month }}-{{event.published.date.day }}
+                    </td>
                     <td>{{event.email}}</td>
                     <td>{{event.phone_number}}</td>
                     <td>{{event.name}}</td>
-                    {% if user.if_staff or user.is_superuser%}
+                    {% if user.is_staff or user.is_superuser%}
+
                     {% if event.performer %}
                     {% if event.performer == user %}
                     <td>
-                        <button data-event='{{event.toJSON|safe}}' value="0" type="submit" onclick='cancelWork(this)'
-                            style="background-color: red;">Отмена
+                        <button data-event='{{event.toJSON|safe}}' value="0" type="submit"
+                            style="background-color: red;">Вы
                     </td>
                     {% else %}
                     <td><button data-event='{{event.toJSON|safe}}' style="background-color: orange; cursor: auto;"
-                            type="submit" value="2" onchange="" disabled>Занято
+                            type="submit" value="2" onchange="" disabled>Есть
                     </td>
                     {% endif %}
                     {% else %}
-                    <td><button data-event='{{event.toJSON|safe}}' type="submit" value="1"
-                            onclick="takeWork(this)">Занять
+                    <td><button data-event='{{event.toJSON|safe}}' type="submit" value="1">Никто
                     </td>
                     {% endif %}
+
                     {% endif %}
 
                     <td><a href="{% url 'event' pk=event.id %}"><button type="submit">Просм</button>

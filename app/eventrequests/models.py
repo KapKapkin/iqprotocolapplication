@@ -1,10 +1,10 @@
 import uuid
-import datetime
 
 from django.db import models
 from django.core import serializers
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
+from django.utils.timezone import now
 from django.contrib.auth import get_user_model
 
 
@@ -88,7 +88,8 @@ class Event(models.Model):
 
     user = models.ForeignKey(
         get_user_model(), on_delete=models.CASCADE, related_name="events")
-
+    published = models.DateTimeField(
+        blank=True, null=True, auto_now_add=True, verbose_name="Время отправки")
     objects = models.Manager()
 
     def save(self, *args, **kwargs):
@@ -121,7 +122,7 @@ class Event(models.Model):
 
 class Subceremony(models.Model):
     discription = models.CharField(
-        max_length=255, default='-', verbose_name="Описание")
+        max_length=255, null=False, blank=False, verbose_name="Описание")
     event = models.ForeignKey(
         Event, on_delete=models.CASCADE, verbose_name="Событие")
 

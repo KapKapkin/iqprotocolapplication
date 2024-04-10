@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Заявка</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="example.css">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" -->
+    <!-- crossorigin="anonymous"></script> -->
+
+    <script src="https://services.cognitoforms.com/s/VSqLsE7970G2a-Ir3-x6cg"></script>
+
+
+
+</head>
+
+<body>
+    <div class="container mt-4">
+        <div class="header">
+            <div class="header-logo-1">
+                <a href="/"><img src="/static/images/logoIQProtocol.png"></a>
+            </div>
+            <div class="header-logo-2"> <img src="/static/images/logoRoscongress.svg"> </div>
+        </div>
+        <div style="text-align: center; width:100%" class="divi">
+            <div class="title-body">
+                <div>
+                    <p style="letter-spacing: 2px"><b>
+                            <p>Заявка</p>
+                            <p class="p">на протокольно-организационное сопровождение</p>
+                            <p class="p">церемонии подписания соглашения
+                            <p>
+                        </b> </p>
+                </div> <br>
+                <hr>
+
+            </div>
+        </div>
+
+        <form method="POST" action='' name="form">
+            <input type="hidden" name="csrfmiddlewaretoken"
+                value="HouCqgmT9FkWnmzFqanioEQSaJlYoxjvMl27lz3HQQc3GrRT7zMd97aqran8LQT3">
+            <div>
+                <h2 class="heading">Вводные данные по церемонии</h2>
+
+                <p><span style="color: red">*</span> Название организации-заказчика:</p><br>
+                <textarea name="customer_name" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    maxlength="255" required id="id_customer_name">
+</textarea>
+                <p><span style="color: red">*</span> Полное наименование подписываемого документа:</p><br>
+                <textarea name="doc_name" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    maxlength="255" required id="id_doc_name">
+</textarea>
+                <p><span style="color: red">*</span> Дата, время, место (из доступных):</p><br>
+                <select name="window" class="form-application" rows="1" cols="30" placeholder="Введите текст:" required
+                    id="id_window">
+                    <option value="" selected>---------</option>
+
+                </select>
+
+
+                <h2 class="heading">Информация о сторонах - участниках подписания:</h2>
+                <p>Количество подписаний с разным списком участников:</p> <br>
+
+
+
+                <div class="form-row">
+
+                    <input type="hidden" name="subceremony-TOTAL_FORMS" value="1" id="id_subceremony-TOTAL_FORMS"><input
+                        type="hidden" name="subceremony-INITIAL_FORMS" value="0"
+                        id="id_subceremony-INITIAL_FORMS"><input type="hidden" name="subceremony-MIN_NUM_FORMS"
+                        value="1" id="id_subceremony-MIN_NUM_FORMS"><input type="hidden"
+                        name="subceremony-MAX_NUM_FORMS" value="1000" id="id_subceremony-MAX_NUM_FORMS">
+
+
+                    <button type="button" id="remove-subceremony">-</button>
+                    <input type="number" min="1" max="15" value="1" readonly class="raz" id="subceremony-counter">
+                    <button type="button" id="add-subceremony">+</button>
+                    <hr>
+                    <div id="subceremonies">
+
+                        <div class="subceremony" id="subceremony-0" prefix="0">
+                            <h2 class="heading">Церемония 1</h2>
+                            <tr>
+                                <th><label for="id_subceremony-0-discription">Описание:</label></th>
+                                <td>
+
+                                    <textarea name="subceremony-0-discription" cols="30" rows="1"
+                                        class="form-application" placeholder="Введите текст:"
+                                        id="id_subceremony-0-discription">
+</textarea>
+
+
+                                    <input type="hidden" name="subceremony-0-id" id="id_subceremony-0-id"><input
+                                        type="hidden" name="subceremony-0-event" id="id_subceremony-0-event">
+
+                                </td>
+                            </tr>
+
+                            <input type="hidden" name="signatory-subceremony-0-signatories-TOTAL_FORMS" value="2"
+                                id="id_signatory-subceremony-0-signatories-TOTAL_FORMS"><input type="hidden"
+                                name="signatory-subceremony-0-signatories-INITIAL_FORMS" value="0"
+                                id="id_signatory-subceremony-0-signatories-INITIAL_FORMS"><input type="hidden"
+                                name="signatory-subceremony-0-signatories-MIN_NUM_FORMS" value="2"
+                                id="id_signatory-subceremony-0-signatories-MIN_NUM_FORMS"><input type="hidden"
+                                name="signatory-subceremony-0-signatories-MAX_NUM_FORMS" value="30"
+                                id="id_signatory-subceremony-0-signatories-MAX_NUM_FORMS">
+
+                            <p>Количество сторон-участников подписания:</p> <br>
+                            <button type="button" class="remove-form"
+                                prefix="signatory-subceremony-0-signatories">-</button>
+                            <input type="number" min="2" max="30" value="2" readonly class="raz form-counter"
+                                id="signatory-subceremony-counter-0">
+                            <button type="button" class="add-form"
+                                prefix="signatory-subceremony-0-signatories">+</button>
+                            <hr>
+                            <div id="signatory-subceremony-0-signatories">
+
+
+
+                                <div class="signatory">
+                                    <h2 style="font-style:italic;">Сторона подписания 1</h2>
+
+
+                                    <p><span style="color: red">*</span> Полное наименование стороны (организации) –
+                                        участника подписания соглашения:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-org_name" cols="30" rows="1"
+                                        class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-org_name">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Должность подписанта:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-position" cols="30" rows="1"
+                                        class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-position">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Форма обращения:</p> <br>
+                                    <div id="id_signatory-subceremony-0-signatories-0-is_man">
+                                        <div>
+                                            <label for="id_signatory-subceremony-0-signatories-0-is_man_0"><input
+                                                    type="radio" name="signatory-subceremony-0-signatories-0-is_man"
+                                                    value="True" id="id_signatory-subceremony-0-signatories-0-is_man_0">
+                                                Господин</label>
+
+                                        </div>
+                                        <div>
+                                            <label for="id_signatory-subceremony-0-signatories-0-is_man_1"><input
+                                                    type="radio" name="signatory-subceremony-0-signatories-0-is_man"
+                                                    value="False"
+                                                    id="id_signatory-subceremony-0-signatories-0-is_man_1">
+                                                Госпожа</label>
+
+                                        </div>
+                                    </div>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Фамилия:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-signatory_surname" cols="30"
+                                        rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-signatory_surname">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Имя:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-signatory_name" cols="30"
+                                        rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-signatory_name">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Отчество:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-signatory_middlename"
+                                        cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-signatory_middlename">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Написание имени и фамилии подписанта на
+                                        английском языке:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-0-signatory_name_translate"
+                                        cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-0-signatory_name_translate">
+</textarea>
+                                    <br>
+
+
+
+
+
+
+                                    <hr>
+                                </div>
+
+
+                                <div class="signatory">
+                                    <h2 style="font-style:italic;">Сторона подписания 2</h2>
+
+
+                                    <p><span style="color: red">*</span> Полное наименование стороны (организации) –
+                                        участника подписания соглашения:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-org_name" cols="30" rows="1"
+                                        class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-org_name">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Должность подписанта:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-position" cols="30" rows="1"
+                                        class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-position">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Форма обращения:</p> <br>
+                                    <div id="id_signatory-subceremony-0-signatories-1-is_man">
+                                        <div>
+                                            <label for="id_signatory-subceremony-0-signatories-1-is_man_0"><input
+                                                    type="radio" name="signatory-subceremony-0-signatories-1-is_man"
+                                                    value="True" id="id_signatory-subceremony-0-signatories-1-is_man_0">
+                                                Господин</label>
+
+                                        </div>
+                                        <div>
+                                            <label for="id_signatory-subceremony-0-signatories-1-is_man_1"><input
+                                                    type="radio" name="signatory-subceremony-0-signatories-1-is_man"
+                                                    value="False"
+                                                    id="id_signatory-subceremony-0-signatories-1-is_man_1">
+                                                Госпожа</label>
+
+                                        </div>
+                                    </div>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Фамилия:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-signatory_surname" cols="30"
+                                        rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-signatory_surname">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Имя:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-signatory_name" cols="30"
+                                        rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-signatory_name">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Отчество:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-signatory_middlename"
+                                        cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-signatory_middlename">
+</textarea>
+                                    <br>
+
+
+
+                                    <p><span style="color: red">*</span> Написание имени и фамилии подписанта на
+                                        английском языке:</p> <br>
+                                    <textarea name="signatory-subceremony-0-signatories-1-signatory_name_translate"
+                                        cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                                        id="id_signatory-subceremony-0-signatories-1-signatory_name_translate">
+</textarea>
+                                    <br>
+
+
+
+
+
+
+                                    <hr>
+                                </div>
+
+
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                </div>
+
+            </div>
+            <h2 class="heading">Дополнительные опции (при наличии)</h2>
+            <hr>
+
+            <h2 class="heading">Почетные гости</h2>
+            <input type="hidden" name="guests-TOTAL_FORMS" value="0" id="id_guests-TOTAL_FORMS"><input type="hidden"
+                name="guests-INITIAL_FORMS" value="0" id="id_guests-INITIAL_FORMS"><input type="hidden"
+                name="guests-MIN_NUM_FORMS" value="0" id="id_guests-MIN_NUM_FORMS"><input type="hidden"
+                name="guests-MAX_NUM_FORMS" value="10" id="id_guests-MAX_NUM_FORMS">
+
+
+
+            <p><span style="color: red">*</span> Формат участия почетных гостей</p><br>
+            <div id="id_honored_guests_format">
+                <div>
+                    <label for="id_honored_guests_format_0"><input type="radio" name="honored_guests_format" value="1"
+                            id="id_honored_guests_format_0">
+                        Приглашаются вместе с подписантами. Во время церемонии стоят за спинами подписантов</label>
+
+                </div>
+                <div>
+                    <label for="id_honored_guests_format_1"><input type="radio" name="honored_guests_format" value="2"
+                            id="id_honored_guests_format_1">
+                        Присутствуют в зале, представляются модератором, но не выходят на сцену</label>
+
+                </div>
+                <div>
+                    <label for="id_honored_guests_format_2"><input type="radio" name="honored_guests_format" value="0"
+                            id="id_honored_guests_format_2">
+                        Не присутствуют</label>
+
+                </div>
+            </div><br>
+
+            <div class="form-row hidden" id="honoredGuestsForm">
+                <p><b>Количество почетных гостей</b></p><br>
+                <button type="button" id="remove-guest">-</button>
+                <input type="number" min="0" max="10" value="0" readonly class="raz" id="guests-counter">
+                <button type="button" id="add-guest">+</button>
+                <hr>
+
+            </div>
+            <div id="honoredGuests">
+
+            </div>
+
+            <h2 class="heading">Обмен подарками во время церемонии</h2>
+            <p><span style="color: red">*</span> Обмен подарками во время церемонии</p><br>
+            <div id="id_presents">
+                <div>
+                    <label for="id_presents_0"><input type="radio" name="presents" value="True" required
+                            id="id_presents_0" checked>
+                        Да</label>
+
+                </div>
+                <div>
+                    <label for="id_presents_1"><input type="radio" name="presents" value="False" required
+                            id="id_presents_1">
+                        Нет</label>
+
+                </div>
+            </div>
+            <br>
+            <hr>
+
+            <h2 class="heading">Предоставление слова участникам церемонии</h2>
+
+            <p><span style="color: red">*</span> Слово предоставляется:</p><br>
+            <div id="id_time_for_speakers">
+                <div>
+                    <label for="id_time_for_speakers_0"><input type="radio" name="time_for_speakers" value="1"
+                            id="id_time_for_speakers_0">
+                        В начале церемонии</label>
+
+                </div>
+                <div>
+                    <label for="id_time_for_speakers_1"><input type="radio" name="time_for_speakers" value="2"
+                            id="id_time_for_speakers_1">
+                        В конце церемонии</label>
+
+                </div>
+                <div>
+                    <label for="id_time_for_speakers_2"><input type="radio" name="time_for_speakers" value="0"
+                            id="id_time_for_speakers_2">
+                        Не предоставляется</label>
+
+                </div>
+            </div>
+            <br>
+            <div id="participantsTrue" class="form-row hidden">
+                <p><span style="color: red">*</span> Дополнительный спикер (не является участником)</p><br>
+                <div>
+                    <input type="radio" onclick="checkAdditionalSpeakerYes();" name="additionalSpeaker"
+                        id="additionalSpeakerYes" required>Да<br>
+                    <input type="radio" onclick="checkAdditionalSpeakerNo();" checked="checked" name="additionalSpeaker"
+                        id="additionalSpeakerNo" required>Нет
+                </div> <br>
+
+                <button type="button" onclick="this.nextElementSibling.stepDown(); MinParticipants();">-</button>
+                <input type="number" min="0" max="10" value="0" readonly class="raz" name="quantityParticipants"
+                    id="quantityParticipants">
+                <button type="button" onclick="AddParticipants(); this.previousElementSibling.stepUp();"
+                    id="speakers_add">+</button>
+                <hr>
+                <input type="hidden" name="speakers-TOTAL_FORMS" value="0" id="id_speakers-TOTAL_FORMS"><input
+                    type="hidden" name="speakers-INITIAL_FORMS" value="0" id="id_speakers-INITIAL_FORMS"><input
+                    type="hidden" name="speakers-MIN_NUM_FORMS" value="0" id="id_speakers-MIN_NUM_FORMS"><input
+                    type="hidden" name="speakers-MAX_NUM_FORMS" value="10" id="id_speakers-MAX_NUM_FORMS">
+
+                <div id="participants">
+
+                </div>
+
+            </div>
+
+
+
+            <h2 class="heading">Предоставить возможность прессе задавать вопросы после церемонии</h2>
+            <p><span style="color: red">*</span> Пресс-подход (наличие прессы обеспечивает заказчик)</p><br>
+            <div id="id_press_briefing">
+                <div>
+                    <label for="id_press_briefing_0"><input type="radio" name="press_briefing" value="True" required
+                            id="id_press_briefing_0">
+                        Да</label>
+
+                </div>
+                <div>
+                    <label for="id_press_briefing_1"><input type="radio" name="press_briefing" value="False" required
+                            id="id_press_briefing_1" checked>
+                        Нет</label>
+
+                </div>
+            </div>
+            <br>
+            <hr>
+            <h2 class="heading">Формат церемонии</h2>
+            <p><span style="color: red">*</span> В каком формате будет проходить церемония</p><br>
+            <div id="id_is_online">
+                <div>
+                    <label for="id_is_online_0"><input type="radio" name="is_online" value="False" required
+                            id="id_is_online_0" checked>
+                        Церемония сполным присутствием (все стороны присутствуют взале)</label>
+
+                </div>
+                <div>
+                    <label for="id_is_online_1"><input type="radio" name="is_online" value="True" required
+                            id="id_is_online_1">
+                        Удаленная онлайн-церемония (одна из сторон подписывает соглашение онлайн)</label>
+
+                </div>
+            </div>
+            <br>
+            <hr>
+            <h2 class="heading">Контакты по заявке</h2>
+            <hr>
+            <h3 style="margin-bottom: 0; font-style:italic;">Контактные данные лица, ответственного за заявку</h3>
+            <p style="color:grey; margin-top: 0; font-size:14px; ">С этим лицом будем взаимодействовать по
+                содержанию заявки и при написании сценария</p><br>
+            <br>
+            <p><span style="color: red">*</span> Фамилия, имя, отчество (полностью):</p><br>
+            <textarea name="name" cols="30" rows="1" class="form-application" placeholder="Введите текст:" required
+                id="id_name">
+</textarea>
+            <br>
+            <p><span style="color: red">*</span> Организация:</p><br>
+            <textarea name="org_name" cols="30" rows="1" class="form-application" placeholder="Введите текст:" required
+                id="id_org_name">
+</textarea>
+            <br>
+            <p><span style="color: red">*</span> Должность:</p><br>
+            <textarea name="position" cols="30" rows="1" class="form-application" placeholder="Введите текст:" required
+                id="id_position">
+</textarea>
+            <br>
+            <p><span style="color: red">*</span> Мобильный телефон:</p><br>
+            <textarea name="phone_number" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                required id="id_phone_number">
+</textarea>
+            <br>
+            <p><span style="color: red">*</span> Email:</p><br>
+            <textarea name="email" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                maxlength="320" required id="id_email">
+</textarea>
+            <br>
+            <hr>
+            <h3 style="margin-bottom: 0; font-style:italic;">Контактные данные представителя, присутствующего на
+                площадке Форума</h3>
+            <p style="color:grey; margin-top: 0; font-size:14px; ">С этим представителем будем связываться накануне
+                церемонии и непосредственно на площадке Форума</p><br>
+
+            <p><span style="color: red">*</span> Представитель на площадке Форума совпадает с лицом, ответственным за
+                заявку</p><br>
+            <div id="id_resp_is_repr">
+                <div>
+                    <label for="id_resp_is_repr_0"><input type="radio" name="resp_is_repr" value="True" required
+                            id="id_resp_is_repr_0">
+                        Да, это тот же человек</label>
+
+                </div>
+                <div>
+                    <label for="id_resp_is_repr_1"><input type="radio" name="resp_is_repr" value="False" required
+                            id="id_resp_is_repr_1">
+                        Нет, это другой человек</label>
+
+                </div>
+            </div>
+            <div name="Coincidence" id="CoincidenceParticipants" class="hidden">
+                <br>
+                <p><span style="color: red">*</span> Фамилия, имя, отчество (полностью):</p><br>
+                <textarea name="repr_name" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    id="id_repr_name">
+</textarea>
+                <br>
+                <p><span style="color: red">*</span> Организация:</p><br>
+                <textarea name="repr_org_name" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    id="id_repr_org_name">
+</textarea>
+                <br>
+                <p><span style="color: red">*</span> Должность:</p><br>
+                <textarea name="repr_position" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    id="id_repr_position">
+</textarea>
+                <br>
+                <p><span style="color: red">*</span> Мобильный телефон:</p><br>
+                <textarea name="repr_phone_number" cols="30" rows="1" class="form-application"
+                    placeholder="Введите текст:" id="id_repr_phone_number">
+</textarea>
+                <br>
+                <p><span style="color: red">*</span> Email:</p><br>
+                <textarea name="repr_email" cols="30" rows="1" class="form-application" placeholder="Введите текст:"
+                    maxlength="320" id="id_repr_email">
+</textarea>
+                <br>
+            </div>
+            <div name="OnlineParticipant" id="OnlineParticipant"></div>
+            <br>
+            <hr>
+            <input type="checkbox" id="agreeCheckbox" required>
+            <label for="agreeCheckbox">Я согласен(на) с обработкой персональных данных</label><br>
+            <p style="font-size: smaller;">Для ознакомления с политикой обработки персональных данных, пожалуйста, <a
+                    href="/static/textfiles/agreement.docx">нажмите здесь</a>.</p>
+            <br>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            <br>
+
+            <button type="submit">Отправить</button>
+            <br>
+            <hr>
+        </form>
+
+        <span> <a href="/account/logout/">Выход</a> <a href="/account/">Личный кабинет</a> </span>
+
+
+
+        <div id="empty-form-guest" class="hidden">
+            <h2 style="font-style:italic;">Почётный гость <span class="name"></span>
+            </h2>
+
+
+            <p><span style="color: red">*</span> Фамилия, имя, отчество почетного гостя:</p> <br>
+            <textarea name="guests-__prefix__-name" cols="30" rows="1" class="form-application"
+                placeholder="Введите текст:" id="id_guests-__prefix__-name">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Должность почетного гостя с указанием организации:</p> <br>
+            <textarea name="guests-__prefix__-position" cols="30" rows="1" class="form-application"
+                placeholder="Введите текст:" id="id_guests-__prefix__-position">
+</textarea>
+
+
+
+
+            <hr>
+        </div>
+
+        <div class="empty-form hidden" id="empty-signatory">
+            <h2 style="font-style:italic;">Сторона подписания <span class="name"></span>
+            </h2>
+
+
+            <p><span style="color: red">*</span> Полное наименование стороны (организации) – участника подписания
+                соглашения:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-org_name" cols="30" rows="1"
+                class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-org_name">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Должность подписанта:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-position" cols="30" rows="1"
+                class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-position">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Форма обращения:</p> <br>
+            <div id="id_signatory-subceremony-__prefix__-signatories-__prefix__-is_man">
+                <div>
+                    <label for="id_signatory-subceremony-__prefix__-signatories-__prefix__-is_man_0"><input type="radio"
+                            name="signatory-subceremony-__prefix__-signatories-__prefix__-is_man" value="True"
+                            id="id_signatory-subceremony-__prefix__-signatories-__prefix__-is_man_0">
+                        Господин</label>
+
+                </div>
+                <div>
+                    <label for="id_signatory-subceremony-__prefix__-signatories-__prefix__-is_man_1"><input type="radio"
+                            name="signatory-subceremony-__prefix__-signatories-__prefix__-is_man" value="False"
+                            id="id_signatory-subceremony-__prefix__-signatories-__prefix__-is_man_1">
+                        Госпожа</label>
+
+                </div>
+            </div>
+
+
+
+            <p><span style="color: red">*</span> Фамилия:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-signatory_surname" cols="30"
+                rows="1" class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-signatory_surname">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Имя:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-signatory_name" cols="30" rows="1"
+                class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-signatory_name">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Отчество:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-signatory_middlename" cols="30"
+                rows="1" class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-signatory_middlename">
+</textarea>
+
+
+
+            <p><span style="color: red">*</span> Написание имени и фамилии подписанта на английском языке:</p> <br>
+            <textarea name="signatory-subceremony-__prefix__-signatories-__prefix__-signatory_name_translate" cols="30"
+                rows="1" class="form-application" placeholder="Введите текст:"
+                id="id_signatory-subceremony-__prefix__-signatories-__prefix__-signatory_name_translate">
+</textarea>
+
+
+
+
+
+
+            <hr>
+        </div>
+
+        <div class="hidden" id="empty-subceremony">
+            <h2 class="heading">Церемония <span class="name"></span></h2>
+            <input type="hidden" name="signatory-subceremony-__prefix__-signatories-MAX_NUM_FORMS" value="30"
+                id="id_signatory-subceremony-__prefix__-signatories-MAX_NUM_FORMS">
+            <input type="hidden" name="signatory-subceremony-__prefix__-signatories-MIN_NUM_FORMS" value="2"
+                id="id_signatory-subceremony-__prefix__-signatories-MIN_NUM_FORMS">
+            <input type="hidden" name="signatory-subceremony-__prefix__-signatories-INITIAL_FORMS" value="0"
+                id="id_signatory-subceremony-__prefix__-signatories-INITIAL_FORMS">
+            <input type="hidden" name="signatory-subceremony-__prefix__-signatories-TOTAL_FORMS" value="0"
+                id="id_signatory-subceremony-__prefix__-signatories-TOTAL_FORMS">
+
+            <tr>
+                <th><label for="id_subceremony-__prefix__-discription">Описание:</label></th>
+                <td>
+
+                    <textarea name="subceremony-__prefix__-discription" cols="30" rows="1" class="form-application"
+                        placeholder="Введите текст:" id="id_subceremony-__prefix__-discription">
+</textarea>
+
+
+                    <input type="hidden" name="subceremony-__prefix__-id" id="id_subceremony-__prefix__-id"><input
+                        type="hidden" name="subceremony-__prefix__-event" id="id_subceremony-__prefix__-event">
+
+                </td>
+            </tr>
+            <p>Количество сторон-участников подписания:</p> <br>
+            <button type="button" class="remove-form" prefix="signatory-subceremony-__prefix__-signatories">-</button>
+            <input type="number" min="0" max="30" value="0" readonly class="raz form-counter"
+                id="signatory-subceremony-counter-__prefix__">
+            <button type="button" class="add-form" prefix="signatory-subceremony-__prefix__-signatories">+</button>
+            <hr>
+
+            <div id="signatory-subceremony-__prefix__-signatories">
+
+            </div>
+
+        </div>
+
+        <script>
+            $(document).on("click", ".add-form", function (event) {
+                this.previousElementSibling.stepUp();
+                add_new_signatory($(this), $('#id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 30);
+            })
+
+            $(document).on("click", ".remove-form", function (event) {
+                this.nextElementSibling.stepDown();
+                remove_form($(this).attr("prefix"), "signatory", $('#' + 'id_' + $(this).attr("prefix") + "-TOTAL_FORMS"), 2)
+            })
+
+            $("#add-subceremony").click(function () {
+                this.previousElementSibling.stepUp();
+                add_new_form('subceremonies', 'subceremony', $('#id_subceremony-TOTAL_FORMS'), 'empty-subceremony', 15);
+                $("#subceremonies .subceremony").last().find(".add-form").click();
+                $("#subceremonies .subceremony").last().find(".add-form").click();
+                $("#subceremonies .form-counter").last().attr("min", "2");
+            });
+
+            $("#remove-subceremony").click(function () {
+                this.nextElementSibling.stepDown();
+                remove_form('subceremonies', 'subceremony', $('#id_subceremony-TOTAL_FORMS'), 1);
+            });
+
+
+            function add_new_signatory(container, forms, max) {
+                var currentFormCount = parseInt(forms.attr("value"));
+
+                var currentFormSubCount = parseInt(container.parent().attr("prefix"));
+                console.log(currentFormSubCount)
+                if (currentFormCount >= max) {
+                    return false;
+                }
+
+                const formCopyTarger = document.getElementById(container.attr("prefix"));
+                const copyEmptyFormEl = document.getElementById("empty-signatory").cloneNode(true);
+                copyEmptyFormEl.setAttribute('class', 'signatory');
+                copyEmptyFormEl.setAttribute("id", "");
+                const regex = new RegExp('__prefix__');
+                for (var i = 0; i < 25; i++) {
+                    copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormSubCount);
+                    copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
+                }
+                forms.attr('value', currentFormCount + 1);
+                copyEmptyFormEl.children[0].querySelector('.name').innerHTML = currentFormCount + 1;
+                formCopyTarger.append(copyEmptyFormEl);
+            }
+
+            function add_new_form(container, element, forms, template, max) {
+                var currentFormCount = parseInt(forms.attr('value'));
+                console.log(currentFormCount);
+                if (currentFormCount >= max) {
+                    return false;
+                }
+
+                const formCopyTarger = document.getElementById(container);
+                const copyEmptyFormEl = document.getElementById(template).cloneNode(true);
+                copyEmptyFormEl.setAttribute('class', element);
+                copyEmptyFormEl.setAttribute('prefix', currentFormCount);
+                copyEmptyFormEl.setAttribute("id", `${element}-${currentFormCount}`);
+                const regex = new RegExp('__prefix__', 'g');
+                copyEmptyFormEl.innerHTML = copyEmptyFormEl.innerHTML.replace(regex, currentFormCount);
+                forms.attr('value', currentFormCount + 1);
+                copyEmptyFormEl.children[0].querySelector('.name').innerHTML = currentFormCount + 1;
+                formCopyTarger.append(copyEmptyFormEl);
+            }
+
+            function remove_form(container, element, forms, min) {
+                if (event) {
+                    event.preventDefault();
+                }
+                const currentForms = document.getElementsByClassName(element);
+                const currentFormCount = forms.attr("value");
+                if (currentFormCount <= min) {
+                    return false;
+                }
+                $(`#${container} .${element}`).last().remove();
+                forms.attr('value', currentFormCount - 1);
+
+            }
+
+            const guestCounter = document.getElementById("guests-counter");
+
+            const totalNewGuestsForms = $("#id_guests-TOTAL_FORMS");
+            totalNewGuestsForms.attr('value', 0);
+
+            $("#add-guest").on("click", function () {
+                this.previousElementSibling.stepUp();
+                add_new_form("honoredGuests", "honoredGuest", totalNewGuestsForms, "empty-form-guest", 10)
+            })
+            $("#remove-guest").on("click", function () {
+                this.nextElementSibling.stepDown();
+                remove_form("honoredGuests", "honoredGuest", totalNewGuestsForms, 0)
+            })
+
+            function checkhonoredGuestsYes() {
+                honoredGuestsForm = document.getElementById('honoredGuestsForm');
+                honoredGuestsForm.setAttribute('class', 'form-row');
+            }
+
+            $("#id_honored_guests_format_0").change(checkhonoredGuestsYes);
+            $("#id_honored_guests_format_1").change(checkhonoredGuestsYes);
+            $("#id_honored_guests_format_2").change(checkhonoredGuestsNo);
+
+            $("#id_honored_guests_format_2").prop('checked', true);
+
+            function checkhonoredGuestsNo() {
+
+                honoredGuestsForm = document.getElementById('honoredGuestsForm');
+                for (var i = 0; i < 10; i++) {
+                    guestCounter.stepDown();
+                }
+                honoredGuestsForm.setAttribute('class', 'form-row hidden');
+                document.getElementById('honoredGuests').innerHTML = '';
+                totalNewGuestsForms.attr('value', 0);
+            }
+
+
+            $("#id_time_for_speakers_0").change(checkWordToTheParticipantsYes);
+            $("#id_time_for_speakers_1").change(checkWordToTheParticipantsYes);
+            $("#id_time_for_speakers_2").change(checkWordToTheParticipantsNo);
+
+            $("#id_time_for_speakers_2").prop('checked', true);
+
+            function checkWordToTheParticipantsYes()//Функция наличия слово учатникам
+            {
+                document.getElementById("participantsTrue").setAttribute("class", "");
+            }
+            function checkWordToTheParticipantsNo()//Функция отсутствия слово учатникам
+            {
+
+                var quantityParticipants = document.getElementById("quantityParticipants");
+                quantityParticipants.min = 0;
+                quantityParticipants.setAttribute("value", 1)
+
+                var removeParticipants = document.getElementById("participantsTrue");
+                var listParticipants = document.getElementById("participants");
+
+                removeParticipants.setAttribute("class", "hidden")
+                listParticipants.innerHTML = '';
+                document.getElementById("id_time_for_speakers_0").required = false;
+                document.getElementById("id_time_for_speakers_1").required = false;
+
+            }
+
+            function checkAdditionalSpeakerYes() {
+                var checkboxAdditionalSpeaker = document.getElementById("additionalSpeakerYes");
+                if (checkboxAdditionalSpeaker.checked == true) {
+                    checkAdditionalSpeakerYes.disabled = true;
+                    var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+                    if (quantity == 0) {
+                        $("#speakers_add").click();
+                    }
+                    var participant1 = document.getElementById('participant1');
+                    const participantDiv = document.createElement('div');
+                    participantDiv.innerHTML =
+                        '<h2>Участник 1 (<i>Дополнительный спикер</i>)</h2>' +
+
+                        '<p><span style="color: red">*</span>Фамилия, имя, отчество (при наличии):</p><br>' +
+                        '<textarea name="speakers-0-name" cols="30" rows="1" class="form-application" placeholder="Введите текст:" id="id_speakers-0-name"></textarea>' +
+
+
+                        '<p><span style="color: red">*</span> Должность с указанием организации:</p><br>' +
+                        '<textarea name="speakers-0-position" cols="30" rows="1" class="form-application" placeholder="Введите текст:" id="id_speakers-0-position"></textarea>';
+                    participant1.innerHTML = participantDiv.innerHTML;
+                }
+            }
+
+            function checkAdditionalSpeakerNo() {
+                var checkboxAdditionalSpeakerYes = document.getElementById("additionalSpeakerYes");
+                var checkboxAdditionalSpeakerNo = document.getElementById("additionalSpeakerNo");
+                if (checkboxAdditionalSpeakerNo.checked == true) {
+                    checkboxAdditionalSpeakerYes.disabled = false;
+                }
+                var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+
+
+
+                var participant1 = document.getElementById('participant1');
+                const select = getSelect();
+                select.setAttribute("name", "participant1");
+                const participantDiv = document.createElement('div'); // Создание обертки для элементов
+                participantDiv.id = 'participant' + quantity;
+                participantDiv.innerHTML =
+                    '<h2>Участник ' + quantity + '</h2>' +
+                    '<p>Фамилия, имя, отчество:</p><br>';
+                participantDiv.appendChild(select); // Добавление элемента <select> в обертку
+                participantDiv.appendChild(document.createElement('hr'));
+                select.setAttribute('name', `speakers-0-name`);
+                participant1.innerHTML = participantDiv.innerHTML;
+            }
+
+
+
+            function getSelect() {
+                const select = document.createElement('select'); // Создание элемента <select>
+                select.className = "form-application"; // Присвоение класса
+                var res = new Set();
+
+                for (i = 0; i < 15; i++) {
+                    for (j = 0; j < 30; j++) {
+                        if ($(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`).length == 0) {
+                            continue;
+                        }
+                        const lastnameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`).val();
+                        const nameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_name`).val();
+                        const middleNameSigning = $(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_middlename`).val();
+                        console.log($(`#id_signatory-subceremony-${i}-signatories-${j}-signatory_surname`));
+
+                        if (middleNameSigning == "-" || middleNameSigning == "_") {
+                            fioSigning = lastnameSigning + " " + nameSigning;
+                        } else {
+                            fioSigning = lastnameSigning + " " + nameSigning + " " + middleNameSigning;
+                        }
+                        res.add(fioSigning);
+                    }
+                }
+                for (const item of res) {
+                    console.log(item);
+                    const option = document.createElement('option');
+                    option.textContent = item;
+
+                    select.appendChild(option);
+                }
+
+                return select;
+            }
+
+            function AddParticipants()//Функция добавления участника
+            {
+
+                var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+                const numberParticipants = document.getElementById("participants");
+                if (quantity < 10) {
+                    quantity = parseInt(quantity) + 1;
+                    const select = getSelect(); // Создание элемента <select>
+
+                    const participantDiv = document.createElement('div'); // Создание обертки для элементов
+                    participantDiv.id = 'participant' + quantity;
+                    participantDiv.innerHTML =
+                        '<h2>Участник ' + quantity + '</h2>' +
+                        '<p>Фамилия, имя, отчество:</p><br>';
+                    participantDiv.appendChild(select); // Добавление элемента <select> в обертку
+                    participantDiv.appendChild(document.createElement('hr'));
+                    select.setAttribute('name', `speakers-${quantity - 1}-name`);
+                    numberParticipants.appendChild(participantDiv); // Добавление обертки в основной контейнер
+
+                    $("#id_speakers-TOTAL_FORMS").attr("value", quantity)
+                }
+            }
+            function MinParticipants()//Функция удвления участника
+            {
+                var quantity = $("#id_speakers-TOTAL_FORMS").attr("value");
+                if (quantity == 0) {
+                    return;
+                }
+                let quantity1 = parseInt(quantity, 10);
+                $("#id_speakers-TOTAL_FORMS").attr("value", quantity - 1);
+                const removeDivParticipant = document.getElementById("participant" + quantity1.toString());
+                removeDivParticipant.remove();
+
+            }
+
+
+            var checkboxCoincidenceYes = document.getElementById("id_resp_is_repr_0");
+            var checkboxCoincidenceNo = document.getElementById("id_resp_is_repr_1");
+
+            checkboxCoincidenceYes.checked = true;
+            CoincidenceYes();
+
+            $("#id_resp_is_repr_0").on("change", function () {
+                if ($("#id_resp_is_repr_0").prop("checked")) {
+                    CoincidenceYes();
+                }
+            })
+
+            $("#id_resp_is_repr_1").on("change", function () {
+                if ($("#id_resp_is_repr_1").prop("checked")) {
+                    CoincidenceNo();
+                }
+            })
+
+            function CoincidenceNo()//Функция добавления представителя
+            {
+                const numberHonoredGuests = document.getElementById("CoincidenceParticipants");
+                numberHonoredGuests.setAttribute("class", '');
+                var ta = numberHonoredGuests.getElementsByTagName('textarea');
+                for (let element of ta) {
+                    element.required = true;
+                    element.value = '';
+                }
+
+
+
+            }
+
+            function CoincidenceYes()//Функция удаления представителя
+            {
+
+
+                const numberHonoredGuests = document.getElementById("CoincidenceParticipants");
+                numberHonoredGuests.setAttribute("class", "hidden");
+                var ta = numberHonoredGuests.getElementsByTagName('textarea');
+                for (let element of ta) {
+                    element.required = false;
+                    element.value = '';
+                }
+
+            }
+        </script>
+
+
+
+    </div>
+
+
+
+
+
+</body>
+
+</html>

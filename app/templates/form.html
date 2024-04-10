@@ -15,7 +15,7 @@
 {% endblock %}
 
 {% block content %}
-<form method="POST" action="" name="form">
+<form method="POST" action='{{action_url}}' name="form">
     {% csrf_token %}
     <div>
         <h2 class="heading">Вводные данные по церемонии</h2>

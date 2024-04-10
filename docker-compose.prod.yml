@@ -6,17 +6,17 @@ services:
     build:
       context: ./app
       dockerfile: dockerfile.prod
-    command: sh -c "python manage.py collectstatic --no-input && python manage.py makemigrations && python manage.py migrate && gunicorn --workers=4 --reload --max-requests=1000 backend.wsgi -b 0.0.0.0:8000"
+    command: sh -c "gunicorn --workers=4 --reload --max-requests=1000 --timeout 3600 iqprotocolapplication.wsgi:application --bind 0.0.0.0:8000"
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-    expose:
-      - 8000
+    ports:
+      - "8000:8000"
     env_file:
       - ./.env.prod
     depends_on:
       - db
-
+      - redis
   db:
     image: postgres:15.0-alpine
     env_file:
@@ -28,25 +28,27 @@ services:
     ports:
       - "6379:6379"
   nginx:
-    build: ./nginx
+    image: nginx:stable-alpine
     volumes:
       - static_volume:/home/app/web/staticfiles
       - media_volume:/home/app/web/mediafiles
-      - ./nginx/prod/:/etc/nginx/conf.d:ro
-      - .certbot/conf:/etc/letsencrypt:ro
-      - ./certbot/www:/var/www/certbot:ro
+      - ./nginx/prod/:/etc/nginx/conf.d/:ro
+      - ./certbot/conf:/etc/letsencrypt/:ro
+      - ./certbot/www:/var/www/certbot/:ro
     ports:
-      - 1337:80
-      - 443:443
+      - "80:80"
+      - "443:443"
+    links:
+      - web
     depends_on:
       - web
   certbot:
     image: certbot/certbot
     container_name: certbot
     volumes:
-      - .certbot/conf:/etc/letsencrypt:rw
-      - .certbot/www:/var/www/certbot:rw
-    command: certonly --webroot --webroot-path=/var/www/certbot/ --email oleg080505@gmail.com --agree-tos --no-eff-email -d 92.255.79.236
+      - ./certbot/conf:/etc/letsencrypt/:rw
+      - ./certbot/www:/var/www/certbot/:rw
+    #command: certonly --webroot --webroot-path=/var/www/certbot/ --email oleg080505@gmail.com --agree-tos --no-eff-email -d olhudyakoff.ru -d www.olhudyakoff.ru
     depends_on:
       - nginx
 volumes:

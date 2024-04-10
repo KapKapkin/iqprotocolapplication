@@ -214,6 +214,7 @@ class EventForm(forms.ModelForm):
 
 class SubceremonyForm(forms.ModelForm):
     discription = forms.CharField(
+        required=True,
         label="Описание",
         widget=forms.Textarea(attrs={
             'class': 'form-application',

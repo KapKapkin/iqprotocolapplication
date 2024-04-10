@@ -20,7 +20,7 @@
     <div class="container-authorization mt-4">
         <div class="form-container" id="login-form" style="display: block;">
             <div class="form-authorization">
-                <form action="" method="post">
+                <form action='{{action_url}}' method="POST">
                     {% csrf_token %}
                     <h2 style="text-align: center;">Регистрация</h2>
                     {{ form.email }}<br>

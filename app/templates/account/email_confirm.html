@@ -22,7 +22,7 @@
                 {% url 'account_confirm_email' confirmation.key as action_url %}
 
                 {% if confirmation %}
-                <form method="post" action='{{action_url}}'>
+                <form method="POST" action='{{action_url}}'>
                     {% csrf_token %}
                     <h2 style="text-align: center;">Подтверждение Email</h2>
                     <button class="form-application" type="submit">Подтвердить</button>

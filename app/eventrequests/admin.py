@@ -79,7 +79,8 @@ class EventAdminForm(forms.ModelForm):
 
 
 class EventAdmin(nested_admin.NestedModelAdmin):
-    list_display = ['number', 'doc_name', 'window']
+    search_fields = ['doc_name', 'window__time', 'window__date', 'published']
+    list_display = ['number', 'doc_name', 'window', 'published']
     inlines = [
         SpeakerInline,
         HonoredGuestInline,
@@ -89,7 +90,7 @@ class EventAdmin(nested_admin.NestedModelAdmin):
     fieldsets = (
 
         (_("Вводные данные о церемонии"), {
-         "fields": ('customer_name', 'doc_name', 'window')}),
+         "fields": ('customer_name', 'doc_name', 'window', 'published')}),
         (
             _("Дополнительные опции"),
             {
@@ -120,7 +121,8 @@ class EventAdmin(nested_admin.NestedModelAdmin):
                        "honored_guests_inline"
                        )}),
     )
-    readonly_fields = "speakers_inline", "honored_guests_inline",
+
+    readonly_fields = "speakers_inline", "honored_guests_inline", "published",
 
     def speakers_inline(self, *args, **kwargs):
         context = getattr(self.response, 'context_data', None) or {
@@ -135,6 +137,9 @@ class EventAdmin(nested_admin.NestedModelAdmin):
         inline = context['inline_admin_formset'] = context['inline_admin_formsets'].pop(
             0)
         return get_template(inline.opts.template).render(context, self.request)
+
+    def get_form(self, request, obj=None, **kwargs):
+        return super(EventAdmin, self).get_form(request, obj, **kwargs)
 
     def render_change_form(self, request, *args, **kwargs):
         self.request = request
